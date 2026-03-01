@@ -444,6 +444,79 @@ body {
 }
 @media(max-width:560px){ .date-row { grid-template-columns:1fr; } }
 
+/* ── SALON PAGE ── */
+#salon-page{background:#f0fff8;min-height:100vh;color:#1a2e2a;position:relative;overflow-x:hidden}
+.salon-bg-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+.sb1{width:500px;height:500px;background:radial-gradient(circle,rgba(52,211,153,.18),transparent);top:-100px;right:-100px}
+.sb2{width:400px;height:400px;background:radial-gradient(circle,rgba(96,165,250,.14),transparent);bottom:100px;left:-80px}
+#salon-nav{position:sticky;top:0;z-index:200;background:rgba(240,255,248,.92);backdrop-filter:blur(12px);padding:16px 64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(52,211,153,.2);box-shadow:0 4px 20px rgba(52,211,153,.08)}
+.salon-main{max-width:1060px;margin:0 auto;padding:72px 48px 100px;position:relative;z-index:1}
+.salon-header{text-align:center;margin-bottom:72px}
+.salon-header h1{font-family:'Kaisei Opti',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.35;margin:16px 0 20px;color:#1a2e2a}
+.salon-header p{font-size:.96rem;color:#3d5a50;line-height:2}
+.salon-section{margin-bottom:88px}
+.salon-section-title{font-family:'Kaisei Opti',serif;font-size:1.5rem;font-weight:700;color:#1a2e2a;text-align:center;margin-bottom:44px}
+.salon-section-title::after{content:'';display:block;width:48px;height:3px;border-radius:2px;margin:12px auto 0;background:linear-gradient(135deg,#34d399,#60a5fa)}
+/* 課題→解決 */
+.salon-problem{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center}
+.sp-card{background:white;border-radius:24px;padding:32px;box-shadow:0 6px 28px rgba(52,211,153,.1)}
+.sp-card.sp-answer{border:2px solid rgba(52,211,153,.3)}
+.sp-icon{font-size:2rem;margin-bottom:12px}
+.sp-card h3{font-family:'Kaisei Opti',serif;font-size:1rem;font-weight:700;color:#1a2e2a;margin-bottom:16px}
+.sp-list{display:flex;flex-direction:column;gap:8px}
+.sp-item{font-size:.82rem;color:#5c4e6e;padding:7px 12px;background:rgba(244,114,182,.05);border-radius:8px;line-height:1.55}
+.sp-item.sp-ok{color:#1a5c42;background:rgba(52,211,153,.08);font-weight:600}
+.sp-arrow{font-size:2.5rem;color:#34d399;font-weight:700;text-align:center}
+/* 役割カード */
+.salon-role-wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:20px;align-items:start}
+.salon-role-card{background:white;border-radius:24px;padding:28px;box-shadow:0 6px 28px rgba(52,211,153,.08);position:relative}
+.src-main{border:2px solid rgba(52,211,153,.35)}
+.src-sub1{border:2px solid rgba(167,139,250,.25)}
+.src-sub2{border:2px solid rgba(96,165,250,.25)}
+.src-badge{display:inline-block;font-size:.65rem;font-weight:700;padding:3px 12px;border-radius:100px;background:linear-gradient(135deg,#34d399,#60a5fa);color:white;margin-bottom:12px}
+.src-badge-purple{background:linear-gradient(135deg,#a78bfa,#f472b6)}
+.src-badge-blue{background:linear-gradient(135deg,#60a5fa,#34d399)}
+.src-icon{font-size:1.8rem;margin-bottom:8px}
+.salon-role-card h3{font-family:'Kaisei Opti',serif;font-size:.95rem;font-weight:700;color:#1a2e2a;margin-bottom:4px}
+.src-sub{font-size:.72rem;color:#34d399;font-weight:700;margin-bottom:14px}
+.src-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+.src-list li{font-size:.79rem;color:#3d5a50;line-height:1.7;padding-left:16px;position:relative}
+.src-list li::before{content:'→';position:absolute;left:0;color:#34d399;font-size:.72rem;top:2px}
+.src-note{font-size:.68rem;color:#9d8fac;margin-top:14px;padding:8px 12px;background:rgba(167,139,250,.06);border-radius:8px;line-height:1.7}
+/* 価値カード */
+.salon-value-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.salon-value-card{background:white;border-radius:24px;padding:32px 28px;box-shadow:0 6px 28px rgba(52,211,153,.08);border:2px solid rgba(52,211,153,.1);transition:all .3s;position:relative;overflow:hidden}
+.salon-value-card:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(52,211,153,.16);border-color:rgba(52,211,153,.3)}
+.svc-num{position:absolute;top:16px;right:20px;font-family:'DM Serif Display',serif;font-size:3.5rem;font-weight:700;color:rgba(52,211,153,.09);line-height:1}
+.svc-icon{font-size:2rem;margin-bottom:12px}
+.salon-value-card h3{font-family:'Kaisei Opti',serif;font-size:.95rem;font-weight:700;color:#1a2e2a;margin-bottom:10px}
+.salon-value-card p{font-size:.8rem;color:#3d5a50;line-height:1.9}
+/* フロー */
+.salon-flow{display:flex;align-items:flex-start;gap:0;justify-content:center;flex-wrap:nowrap}
+.sflow-step{flex:1;min-width:0;background:white;border-radius:20px;padding:30px 16px 22px;border:2px solid rgba(52,211,153,.15);box-shadow:0 4px 20px rgba(52,211,153,.08);text-align:center;position:relative;transition:all .3s}
+.sflow-step:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(52,211,153,.15)}
+.sflow-num{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#34d399,#60a5fa);color:white;font-size:.72rem;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.sflow-icon{font-size:1.8rem;margin:8px 0 10px}
+.sflow-step h4{font-family:'Kaisei Opti',serif;font-size:.85rem;font-weight:700;color:#1a2e2a;margin-bottom:8px}
+.sflow-step p{font-size:.73rem;color:#3d5a50;line-height:1.8}
+.sflow-arrow{font-size:1.4rem;color:#34d399;padding:0 6px;margin-top:56px;flex-shrink:0;opacity:.5}
+/* CTA */
+.salon-cta{background:linear-gradient(135deg,rgba(52,211,153,.07),rgba(96,165,250,.07));border:2px solid rgba(52,211,153,.2);border-radius:32px;padding:60px 48px;text-align:center}
+.salon-cta h2{font-family:'Kaisei Opti',serif;font-size:1.6rem;font-weight:700;color:#1a2e2a;margin:12px 0 16px;line-height:1.4}
+.salon-cta p{font-size:.9rem;color:#3d5a50;line-height:2;margin-bottom:36px}
+.salon-cta-btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+@media(max-width:960px){
+  #salon-nav{padding:14px 20px}
+  .salon-main{padding:60px 20px 80px}
+  .salon-problem{grid-template-columns:1fr}
+  .sp-arrow{transform:rotate(90deg);justify-self:center}
+  .salon-role-wrap{grid-template-columns:1fr}
+  .salon-value-cards{grid-template-columns:1fr}
+  .salon-flow{flex-direction:column;align-items:stretch}
+  .sflow-arrow{transform:rotate(90deg);margin:0 auto;padding:4px 0;display:block;text-align:center}
+  .salon-cta{padding:40px 20px}
+}
+
 /* PARTNER RECRUIT SECTION */
 #partner-recruit { background:linear-gradient(160deg,#fff0f8 0%,#f5f0ff 50%,#f0f8ff 100%); padding:100px 64px; }
 .pr-wrap { max-width:1000px; margin:0 auto; }
@@ -724,6 +797,7 @@ body {
       <li><a href="#steps" data-i18n="nav.steps">サービス</a></li>
       <li><a href="#merit" data-i18n="nav.merit">価値</a></li>
       <li><a href="#roadmap" data-i18n="nav.roadmap">展望</a></li>
+      <li><a href="#" onclick="showPage('salon-page');return false;" style="color:#34d399;font-weight:700">サロン・美容師の方へ</a></li>
       <li><a href="#" onclick="showPage('partner-page');return false;" style="color:#f472b6;font-weight:700">共創パートナー募集</a></li>
       <li><a href="#" onclick="showPage('inquiry-page');return false;" data-i18n="nav.contact">お問い合わせ</a></li>
     </ul>
@@ -757,6 +831,20 @@ body {
     </div>
   </section>
 
+  <!-- SALON BANNER -->
+  <div style="background:linear-gradient(135deg,rgba(52,211,153,.1),rgba(96,165,250,.08));border-top:1px solid rgba(52,211,153,.2);border-bottom:1px solid rgba(52,211,153,.2);padding:18px 64px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:1.3rem">✂️</span>
+      <div>
+        <div style="font-size:.72rem;font-weight:700;color:#34d399;letter-spacing:.08em;margin-bottom:2px">FOR SALONS & BEAUTICIANS</div>
+        <div style="font-size:.88rem;font-weight:700;color:#1a2e2a">新人育成・研修の場をお探しのサロン様へ</div>
+      </div>
+    </div>
+    <button onclick="showPage('salon-page')" style="display:flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;border:none;background:linear-gradient(135deg,#34d399,#60a5fa);color:white;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap;box-shadow:0 4px 16px rgba(52,211,153,.3);transition:all .3s" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+      サロン向け詳細を見る →
+    </button>
+  </div>
+
   <!-- PROBLEM -->
   <section id="problem">
     <div class="problem-layout">
@@ -787,7 +875,7 @@ body {
     <div class="steps-grid">
       <div class="step-card"><div class="step-badge">01</div><span class="step-em">🤝</span><div class="step-sub">Pre-Mentoring</div><h3 data-i18n="steps.s1h">プレ・メンタリング<br>心の安全基地づくり</h3><p data-i18n="steps.s1p">美容学生と1対1の対話で信頼関係を構築。「パス可能ルール」で自分のペースを守れます。</p><div class="step-arrow">→</div></div>
       <div class="step-card"><div class="step-badge">02</div><span class="step-em">🪞</span><div class="step-sub">Assessment</div><h3 data-i18n="steps.s2h">共創アセスメント<br>自分を見つめる</h3><p data-i18n="steps.s2p">鏡を見ながら悩みを可視化し、「どんな自分なら外に出やすいか」を一緒に探ります。</p><div class="step-arrow">→</div></div>
-      <div class="step-card"><div class="step-badge">03</div><span class="step-em">💅</span><div class="step-sub">Workshop</div><h3 data-i18n="steps.s3h">共創ワークショップ<br>伴走型セルフケア指導</h3><p data-i18n="steps.s3p">カット等の施術はプロ美容師が担当。美容学生は「教えるパートナー（伴走者）」として、アイロン操作・スキンケア・似合わせ提案を一緒に行います。</p><div class="step-arrow">→</div></div>
+      <div class="step-card"><div class="step-badge">03</div><span class="step-em">💅</span><div class="step-sub">Workshop</div><h3 data-i18n="steps.s3h">共創ワークショップ<br>伴走型セルフケア指導</h3><p data-i18n="steps.s3p">施術はサロンの新人美容師が担当し、新人研修の実践の場としても機能します。美容学生は「教えるパートナー」としてアイロン指導・スキンケア・似合わせ提案を行います。</p><div class="step-arrow">→</div></div>
       <div class="step-card"><div class="step-badge">04</div><span class="step-em">🌟</span><div class="step-sub">Aftercare</div><h3 data-i18n="steps.s4h">アフターケア<br>リフレクション</h3><p data-i18n="steps.s4p">変化した自分を確認し感情を言語化。「ステータスカード」が自信の持続をサポート。</p></div>
     </div>
   </section>
@@ -808,11 +896,11 @@ body {
           </div>
         </div>
         <div class="merit-col for-student">
-          <div class="col-head"><div class="col-icon">✂️</div><div><h3 data-i18n="merit.s.title">美容学生への価値</h3><span data-i18n="merit.s.sub">技術を、人の力に変える経験</span></div></div>
+          <div class="col-head"><div class="col-icon">✂️</div><div><h3 data-i18n="merit.s.title">新人美容師・美容学生への価値</h3><span data-i18n="merit.s.sub">現場で磨く、本物の力</span></div></div>
           <div class="merit-list">
-            <div class="m-item"><div class="m-check">◈</div><div><h4 data-i18n="merit.s1h">高度な対人スキルの習得</h4><p data-i18n="merit.s1p">繊細な悩みを持つ相手への傾聴力・提案力を磨き、市場価値を高めます。</p></div></div>
+            <div class="m-item"><div class="m-check">◈</div><div><h4 data-i18n="merit.s1h">新人の実践・研修の場</h4><p data-i18n="merit.s1p">サロン1年目の新人美容師が「社会的意義のある現場」で技術・接客・傾聴力を同時に磨ける研修機会になります。</p></div></div>
             <div class="m-item"><div class="m-check">◈</div><div><h4 data-i18n="merit.s2h">社会的意義の体感</h4><p data-i18n="merit.s2p">「教える・伴走する」という形で人の人生を前向きに変える成功体験を早期に獲得します。</p></div></div>
-            <div class="m-item"><div class="m-check">◈</div><div><h4 data-i18n="merit.s3h">キャリアの実績づくり</h4><p data-i18n="merit.s3p">社会貢献活動の実績を就職活動の強力なアピール材料にできます。</p></div></div>
+            <div class="m-item"><div class="m-check">◈</div><div><h4 data-i18n="merit.s3h">キャリアの実績づくり</h4><p data-i18n="merit.s3p">社会貢献活動の実績を就職活動・サロンのブランディングの強力なアピール材料にできます。</p></div></div>
           </div>
         </div>
       </div>
@@ -919,6 +1007,9 @@ body {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           <span data-i18n="pr.navbtn">共創パートナー募集</span>
         </button>
+        <button onclick="showPage('salon-page')" style="display:flex;align-items:center;gap:8px;padding:14px 24px;border-radius:100px;border:2px solid rgba(52,211,153,.5);background:rgba(52,211,153,.08);color:#1a5c42;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .3s" onmouseover="this.style.background='rgba(52,211,153,.18)'" onmouseout="this.style.background='rgba(52,211,153,.08)'">
+          ✂️ サロン・美容師の方へ
+        </button>
       </div>
       <div class="contact-person"><div class="cp-name" data-i18n="contact.name">鈴木 陽大</div><div class="cp-role" data-i18n="contact.role">代表 ／ 羽田国際高等学校 2年</div></div>
     </div>
@@ -997,8 +1088,8 @@ body {
         <div class="ficon">✂️</div>
         <div class="fstep">Step 03 · Main Session</div>
         <h3>共創ワークショップ</h3>
-        <p>プロ美容師がカットを担当。<br>学生は伴走者として<br>セルフケアを一緒に学ぶ</p>
-        <div class="ftags"><span class="ftag">プロ美容師カット</span><span class="ftag">セルフアイロン指導</span><span class="ftag">似合わせ提案</span></div>
+        <p>新人美容師が実践の場として施術。<br>美容学生は伴走者として<br>セルフケア指導・レクチャーを担当</p>
+        <div class="ftags"><span class="ftag">新人美容師カット</span><span class="ftag">新人研修の場</span><span class="ftag">セルフケア指導</span></div>
       </div>
       <div class="flow-arrow">›</div>
       <div class="fcard fcard-4">
@@ -1018,13 +1109,19 @@ body {
       <div class="hl-left">
         <div class="hl-badge">✂️ Step 03 · 150 min</div>
         <h3>共創<span>ワークショップ</span></h3>
-        <p>カット・眉などの施術は<strong>有資格のプロ美容師</strong>が責任を持って担当。美容学生は「施術の代行者」ではなく<strong>「伴走者・教育パートナー」</strong>として、参加者が自分で明日から再現できるセルフケアを一緒に学びます。</p>
+        <p>カット・眉などの施術は<strong>サロンの新人美容師</strong>が担当。Re-Paletteは<strong>新人の実践・研修の場</strong>として機能します。美容学生は「伴走者・教育パートナー」として、参加者が自分で明日から再現できるセルフケアをレクチャーします。</p>
         <div style="margin-top:16px;padding:12px 16px;background:rgba(167,139,250,.07);border-radius:12px;border-left:3px solid #a78bfa">
           <div style="font-size:.72rem;font-weight:700;color:#a78bfa;margin-bottom:6px">役割分担</div>
           <div style="font-size:.78rem;color:#5c4e6e;line-height:1.9">
-            <strong style="color:#2d2038">美容師（有資格）</strong>：カット・カラー・眉など刃物・薬品を使う施術と安全管理<br>
-            <strong style="color:#2d2038">美容学生</strong>：セルフケア指導・似合わせ提案・ステータスカード記入<br>
-            <strong style="color:#2d2038">鈴木（運営）</strong>：場の管理・自治体連携・自己肯定感データの数値化
+            <strong style="color:#2d2038">🏠 サロン新人美容師</strong>：カット・眉など刃物を使う施術全般・安全管理<br>
+            <strong style="color:#2d2038">🎓 美容学生</strong>：セルフアイロン指導・似合わせ提案・スキンケアレクチャー・ステータスカード記入<br>
+            <strong style="color:#2d2038">🌱 鈴木（運営）</strong>：場の管理・自治体連携・自己肯定感データの数値化
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:12px 16px;background:rgba(244,114,182,.06);border-radius:12px;border-left:3px solid #f472b6">
+          <div style="font-size:.72rem;font-weight:700;color:#f472b6;margin-bottom:4px">✨ サロンにとってのメリット</div>
+          <div style="font-size:.78rem;color:#5c4e6e;line-height:1.8">
+            新人スタイリストが「社会的に意味のある現場」で接客・技術・コミュニケーション力を同時に磨けます。新人研修プログラムとしてサロンに導入可能。
           </div>
         </div>
       </div>
@@ -1038,6 +1135,7 @@ body {
     <h3 class="detail-title" style="margin-top:72px">各ステップの<span>ポイント</span></h3>
     <div class="mini-cards">
       <div class="mini-card"><div class="mini-em">🤝</div><h4>心理的安全性の確保</h4><p>「パス可能ルール」を徹底し、参加者が自分のペースで参加できる環境を全ステップで維持します。</p></div>
+      <div class="mini-card"><div class="mini-em">🏠</div><h4>新人美容師の実践の場</h4><p>サロンの1年目スタイリストが現場経験を積める研修の場として機能。技術・接客・傾聴力を同時に磨けます。</p></div>
       <div class="mini-card"><div class="mini-em">🎓</div><h4>厳選された美容学生</h4><p>共感力・柔軟性・言語化能力の3基準で選考。「教えること」に特化した事前研修を実施します。</p></div>
       <div class="mini-card"><div class="mini-em">📋</div><h4>ステータスカードで成長を記録</h4><p>学生が「今日のここが素敵だった」という心の変化を言語化。自信の持続を視覚的にサポートします。</p></div>
     </div>
@@ -1721,6 +1819,197 @@ body {
 </div><!-- /partner-page -->
 
 
+<!-- ══════════════════════════════════════
+     SALON PAGE（サロン・美容師の方へ）
+══════════════════════════════════════ -->
+<div id="salon-page" class="page">
+
+  <div class="salon-bg-orb sb1"></div>
+  <div class="salon-bg-orb sb2"></div>
+
+  <nav id="salon-nav">
+    <button class="nav-logo-pill" onclick="showPage('home')">Re-Palette</button>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn-outline" onclick="showPage('home')" style="cursor:pointer;font-size:.8rem;padding:8px 20px">← ホームへ戻る</button>
+      <button class="btn-grad" onclick="showPage('inquiry-page')" style="font-size:.8rem;padding:8px 20px;cursor:pointer">お問い合わせ</button>
+    </div>
+  </nav>
+
+  <div class="salon-main">
+
+    <!-- ヘッダー -->
+    <div class="salon-header">
+      <div class="page-chip" style="background:linear-gradient(white,white) padding-box,linear-gradient(135deg,#34d399,#60a5fa) border-box;border:2px solid transparent"><span class="chip-dot" style="background:#34d399"></span>For Salons & Beauticians</div>
+      <h1>新人育成に、<br><span style="background:linear-gradient(135deg,#34d399,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">社会的意義のある現場</span>を。</h1>
+      <p>Re-Paletteは、サロンの新人美容師が<strong>「技術・接客・傾聴力」</strong>を<br>社会課題解決の現場で実践的に磨ける、新しい研修プログラムです。</p>
+    </div>
+
+    <!-- 課題提起 -->
+    <div class="salon-section">
+      <div class="salon-problem">
+        <div class="sp-card">
+          <div class="sp-icon">😰</div>
+          <h3>新人育成の悩み、ありませんか？</h3>
+          <div class="sp-list">
+            <div class="sp-item">✗ 新人が技術を磨く実践の場が少ない</div>
+            <div class="sp-item">✗ 繊細なお客様への接客トレーニングが難しい</div>
+            <div class="sp-item">✗ サロンの社会貢献活動として形にしたい</div>
+            <div class="sp-item">✗ スタッフのモチベーション・やりがいを高めたい</div>
+          </div>
+        </div>
+        <div class="sp-arrow">→</div>
+        <div class="sp-card sp-answer">
+          <div class="sp-icon">✨</div>
+          <h3>Re-Paletteが解決します</h3>
+          <div class="sp-list">
+            <div class="sp-item sp-ok">✓ 実際の施術現場で技術・接客を同時に習得</div>
+            <div class="sp-item sp-ok">✓ 繊細な背景を持つ方への傾聴・ケアを実践</div>
+            <div class="sp-item sp-ok">✓ CSR活動・サロンブランディングに活用可能</div>
+            <div class="sp-item sp-ok">✓ 「社会に貢献できる仕事」の実感でやりがい向上</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 役割と仕組み -->
+    <div class="salon-section">
+      <h2 class="salon-section-title">Re-Paletteにおける<br>サロン・新人美容師の役割</h2>
+
+      <div class="salon-role-wrap">
+        <div class="salon-role-card src-main">
+          <div class="src-badge">Main Role</div>
+          <div class="src-icon">✂️</div>
+          <h3>新人美容師（1〜3年目）</h3>
+          <p class="src-sub">技術と人間力を同時に磨く実践の場</p>
+          <ul class="src-list">
+            <li>カット・眉など刃物を使う施術全般を担当</li>
+            <li>繊細な背景を持つ参加者への傾聴・コミュニケーション</li>
+            <li>施術中のカウンセリングと心理的安全性の確保</li>
+            <li>安全管理責任者として場を守る</li>
+          </ul>
+          <div class="src-note">
+            ※ 美容師法に基づき、刃物・薬品を使う施術はすべて有資格者（新人美容師）が担当します
+          </div>
+        </div>
+
+        <div class="salon-role-card src-sub1">
+          <div class="src-badge src-badge-green">Support</div>
+          <div class="src-icon">🎓</div>
+          <h3>美容学生</h3>
+          <p class="src-sub">伴走者・教育パートナーとして</p>
+          <ul class="src-list">
+            <li>セルフアイロン・コテ操作のレクチャー</li>
+            <li>スキンケア・清潔感指導</li>
+            <li>似合わせカウンセリング（理論的な提案）</li>
+            <li>ステータスカードへの「心の変化」記入</li>
+          </ul>
+        </div>
+
+        <div class="salon-role-card src-sub2">
+          <div class="src-badge src-badge-blue">Manage</div>
+          <div class="src-icon">🌱</div>
+          <h3>Re-Palette運営</h3>
+          <p class="src-sub">安心して参加できる場を設計</p>
+          <ul class="src-list">
+            <li>参加者の事前ヒアリング・マッチング</li>
+            <li>パス可能ルールなど心理的安全の設計</li>
+            <li>自治体・行政との連携窓口</li>
+            <li>自己肯定感データの記録・報告</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- サロンが得られるもの -->
+    <div class="salon-section">
+      <h2 class="salon-section-title">サロンが得られる<span style="background:linear-gradient(135deg,#34d399,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">3つの価値</span></h2>
+      <div class="salon-value-cards">
+        <div class="salon-value-card">
+          <div class="svc-num">01</div>
+          <div class="svc-icon">🏋️</div>
+          <h3>新人研修プログラムとして活用</h3>
+          <p>通常の練習台では得られない「繊細なお客様への対応力」を実践で習得。技術・接客・傾聴力の3つを同時に磨ける唯一の研修環境です。</p>
+        </div>
+        <div class="salon-value-card">
+          <div class="svc-num">02</div>
+          <div class="svc-icon">🌍</div>
+          <h3>CSR・ブランディングに貢献</h3>
+          <p>社会復帰支援への参画はサロンのCSR活動として対外発信できます。「社会課題と向き合うサロン」としてブランド価値と採用力を高めます。</p>
+        </div>
+        <div class="salon-value-card">
+          <div class="svc-num">03</div>
+          <div class="svc-icon">🔥</div>
+          <h3>スタッフのやりがいと定着率向上</h3>
+          <p>「技術が人の人生を変える」という実体験がスタッフのモチベーションを高めます。仕事に意義を感じられる環境づくりが離職率の低下にもつながります。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 参加の流れ -->
+    <div class="salon-section">
+      <h2 class="salon-section-title">参加までの流れ</h2>
+      <div class="salon-flow">
+        <div class="sflow-step">
+          <div class="sflow-num">01</div>
+          <div class="sflow-icon">💬</div>
+          <h4>まずはご相談</h4>
+          <p>お問い合わせフォームまたはInstagram DMから気軽にご連絡ください。Zoomで30分のカジュアルな面談を行います。</p>
+        </div>
+        <div class="sflow-arrow">→</div>
+        <div class="sflow-step">
+          <div class="sflow-num">02</div>
+          <div class="sflow-icon">📋</div>
+          <h4>条件すり合わせ</h4>
+          <p>参加人数・日程・会場（サロン or 外部会場）・担当する新人スタイリストの選定など、詳細を調整します。</p>
+        </div>
+        <div class="sflow-arrow">→</div>
+        <div class="sflow-step">
+          <div class="sflow-num">03</div>
+          <div class="sflow-icon">🎓</div>
+          <h4>事前ブリーフィング</h4>
+          <p>参加者の背景・パス可能ルール・心理的安全性の設計について、新人スタイリストへの事前研修を実施します。</p>
+        </div>
+        <div class="sflow-arrow">→</div>
+        <div class="sflow-step sflow-last">
+          <div class="sflow-num">🎉</div>
+          <div class="sflow-icon">✨</div>
+          <h4>イベント当日</h4>
+          <p>約4時間のイベントに参加。終了後は活動実績レポートをお渡しします。継続参加も歓迎です。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="salon-cta">
+      <span style="font-size:2rem">✂️</span>
+      <h2>まずはカジュアルな<br>面談からはじめませんか？</h2>
+      <p>「新人の育成に困っている」「社会貢献活動を考えている」<br>そんなサロンオーナー・マネージャーの方、ぜひ一度お話しましょう。</p>
+      <div class="salon-cta-btns">
+        <a href="https://www.instagram.com/repalette_official/" target="_blank" rel="noopener" class="pcta-btn pcta-ig">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram DM
+        </a>
+        <a href="mailto:mypalette1030@outlook.com?subject=Re-Palette相談・申し込み" class="pcta-btn pcta-mail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          メールで問い合わせる
+        </a>
+        <button class="pcta-btn pcta-form" onclick="showPage('inquiry-page')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+          お問い合わせフォーム
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="background:linear-gradient(135deg,#312e55,#2d3748);padding:32px 64px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1">
+    <div style="font-family:'DM Serif Display',serif;font-size:1.1rem;background:linear-gradient(135deg,#6ee7b7,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Re-Palette</div>
+    <div style="font-size:.71rem;color:rgba(255,255,255,.3)">© 2025 Re-Palette. All rights reserved.</div>
+  </footer>
+
+</div><!-- /salon-page -->
+
+
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 
 <!-- Firebase SDK (module) -->
@@ -1871,7 +2160,7 @@ const i18n = {
     'steps.s2h': '共創アセスメント<br>自分を見つめる',
     'steps.s2p': '鏡を見ながら悩みを可視化し、「どんな自分なら外に出やすいか」を一緒に探ります。',
     'steps.s3h': '共創ワークショップ<br>伴走型セルフケア指導',
-    'steps.s3p': 'カット等の施術はプロ美容師が担当。美容学生は「教えるパートナー（伴走者）」として、アイロン操作・スキンケア・似合わせ提案を一緒に行います。',
+    'steps.s3p': '施術はサロンの新人美容師が担当し、新人研修の実践の場としても機能します。美容学生は「教えるパートナー」としてアイロン指導・スキンケア・似合わせ提案を行います。',
     'steps.s4h': 'アフターケア<br>リフレクション',
     'steps.s4p': '変化した自分を確認し感情を言語化。「ステータスカード」が自信の持続をサポート。',
     'merit.u.title': '参加者（当事者）への価値',
@@ -1882,14 +2171,14 @@ const i18n = {
     'merit.u2p': '年齢の近い学生との交流が、社会復帰へのスモールステップになります。',
     'merit.u3h': '一生モノのセルフケア技術',
     'merit.u3p': 'アイロンの使い方・スキンケア・似合わせ提案など、自分で再現できる力を習得し、日々の自信につなげます。',
-    'merit.s.title': '美容学生への価値',
-    'merit.s.sub': '技術を、人の力に変える経験',
-    'merit.s1h': '高度な対人スキルの習得',
-    'merit.s1p': '繊細な悩みを持つ相手への傾聴力・提案力を磨き、市場価値を高めます。',
+    'merit.s.title': '新人美容師・美容学生への価値',
+    'merit.s.sub': '現場で磨く、本物の力',
+    'merit.s1h': '新人の実践・研修の場',
+    'merit.s1p': 'サロン1年目の新人美容師が「社会的意義のある現場」で技術・接客・傾聴力を同時に磨ける研修機会になります。',
     'merit.s2h': '社会的意義の体感',
     'merit.s2p': '「教える・伴走する」という形で人の人生を前向きに変える成功体験を早期に獲得します。',
     'merit.s3h': 'キャリアの実績づくり',
-    'merit.s3p': '社会貢献活動の実績を就職活動の強力なアピール材料にできます。',
+    'merit.s3p': '社会貢献活動の実績を就職活動・サロンのブランディングの強力なアピール材料にできます。',
     'rev.t1': 'BtoG — 行政',
     'rev.h1': '自治体との連携',
     'rev.p1': '「孤独・孤立対策」「自立支援」事業を受託し、行政と協働でインパクトを拡大。',
@@ -1980,7 +2269,7 @@ const i18n = {
     'steps.s2h': 'Co-Creation Assessment<br>Reflecting on Yourself',
     'steps.s2p': 'Look in the mirror to visualize concerns and explore together what kind of appearance would help you feel ready to step outside.',
     'steps.s3h': 'Co-Creation Workshop<br>Guided Self-Care',
-    'steps.s3p': 'A licensed beautician handles cutting. The beauty student acts as a "coaching partner," guiding iron styling, skincare, and personalized recommendations.',
+    'steps.s3p': 'A salon\'s new beautician handles all cutting as practical training. The beauty student acts as a "coaching partner," guiding iron styling, skincare, and personalized recommendations.',
     'steps.s4h': 'Aftercare<br>Reflection',
     'steps.s4p': 'Confirm your transformation and put your feelings into words. Your "Status Card" helps sustain your confidence.',
     'merit.u.title': 'Value for Participants',
@@ -1991,14 +2280,14 @@ const i18n = {
     'merit.u2p': 'Interacting with near-peer students becomes a small step toward social reintegration.',
     'merit.u3h': 'Lifelong Self-Care Skills',
     'merit.u3p': 'Learn skills you can reproduce at home — iron styling, skincare, and personalized style advice — building daily confidence.',
-    'merit.s.title': 'Value for Beauty Students',
-    'merit.s.sub': 'Turning skill into human connection',
-    'merit.s1h': 'Advanced Interpersonal Skills',
-    'merit.s1p': 'Sharpen your listening and advisory abilities with clients who have delicate concerns, raising your market value.',
+    'merit.s.title': 'Value for New Beauticians & Beauty Students',
+    'merit.s.sub': 'Real skills, forged in a real setting',
+    'merit.s1h': 'A Real Training Ground',
+    'merit.s1p': 'First-year salon beauticians gain hands-on experience in a meaningful social setting — developing technique, client communication, and listening skills simultaneously.',
     'merit.s2h': 'Experiencing Social Impact',
     'merit.s2p': 'Gain early experience of positively changing someone\'s life through teaching and walking alongside them.',
-    'merit.s3h': 'Building Career Track Record',
-    'merit.s3p': 'Social contribution experience becomes a powerful appeal in job hunting.',
+    'merit.s3h': 'Building Career & Brand Track Record',
+    'merit.s3p': 'Social contribution experience becomes a powerful appeal for job hunting and a branding asset for the salon.',
     'rev.t1': 'BtoG — Government',
     'rev.h1': 'Municipal Partnership',
     'rev.p1': 'Contracted for "social isolation countermeasures" and "independence support" projects, expanding impact alongside local governments.',
@@ -2098,7 +2387,7 @@ const i18n = {
     'steps.s2h': '공동 창작 어세스먼트<br>자신을 되돌아보기',
     'steps.s2p': '거울을 보며 고민을 가시화하고, "어떤 모습이라면 외출하기 쉬울까"를 함께 탐색합니다.',
     'steps.s3h': '공동 창작 워크샵<br>동반 자기 관리 지도',
-    'steps.s3p': '커트 등 시술은 자격 있는 미용사가 담당합니다. 뷰티 학생은 "가르치는 파트너(동반자)"로서 아이론 사용법, 스킨케어, 어울리는 스타일 제안을 함께 합니다.',
+    'steps.s3p': '시술은 살롱의 신인 미용사가 담당하여 신인 연수의 실습 장소로도 기능합니다. 뷰티 학생은 "가르치는 파트너"로서 아이론 지도・스킨케어・어울리는 스타일 제안을 담당합니다.',
     'steps.s4h': '애프터케어<br>리플렉션',
     'steps.s4p': '변화한 자신을 확인하고 감정을 언어화합니다. "상태 카드"가 자신감 유지를 지원합니다.',
     'merit.u.title': '참가자(당사자)에게 주는 가치',
@@ -2109,14 +2398,14 @@ const i18n = {
     'merit.u2p': '또래 학생과의 교류가 사회 복귀를 위한 작은 한 걸음이 됩니다.',
     'merit.u3h': '평생 자기 관리 기술',
     'merit.u3p': '아이론 사용법·스킨케어·어울리는 스타일 제안 등, 스스로 재현할 수 있는 힘을 습득하여 매일의 자신감으로 이어집니다.',
-    'merit.s.title': '뷰티 학생에게 주는 가치',
-    'merit.s.sub': '기술을 사람의 힘으로 바꾸는 경험',
-    'merit.s1h': '고도의 대인 스킬 습득',
-    'merit.s1p': '섬세한 고민을 가진 상대에 대한 경청력·제안력을 기르고 시장 가치를 높입니다.',
+    'merit.s.title': '신인 미용사・뷰티 학생에게 주는 가치',
+    'merit.s.sub': '현장에서 갈고닦는 진짜 실력',
+    'merit.s1h': '신인의 실습・연수 장소',
+    'merit.s1p': '살롱 1년차 신인 미용사가 "사회적 의의 있는 현장"에서 기술・접객・경청력을 동시에 키울 수 있는 연수 기회가 됩니다.',
     'merit.s2h': '사회적 의의 체감',
     'merit.s2p': '"가르치고 동반하는" 형태로 타인의 인생을 긍정적으로 변화시키는 성공 경험을 조기에 획득합니다.',
-    'merit.s3h': '커리어 실적 쌓기',
-    'merit.s3p': '사회 공헌 활동 실적을 취업 활동의 강력한 어필 소재로 활용할 수 있습니다.',
+    'merit.s3h': '커리어・브랜드 실적 쌓기',
+    'merit.s3p': '사회 공헌 활동 실적을 취업 활동과 살롱 브랜딩의 강력한 어필 소재로 활용할 수 있습니다.',
     'rev.t1': 'BtoG — 행정',
     'rev.h1': '지자체 연계',
     'rev.p1': '"고독·고립 대책" "자립 지원" 사업을 수탁하여 행정과 협력해 임팩트를 확대합니다.',
@@ -2216,7 +2505,7 @@ const i18n = {
     'steps.s2h': '共创评估<br>重新认识自己',
     'steps.s2p': '对着镜子将烦恼可视化，一起探索"怎样的自己更容易走出门"。',
     'steps.s3h': '共创工作坊<br>伴随式自我护理指导',
-    'steps.s3p': '剪发等施术由持照美容师负责。美容学生作为"教导伙伴（陪伴者）"，共同进行烫发造型、护肤及个性化建议。',
+    'steps.s3p': '施术由美容院的新人美容师担当，也作为新人研修的实践场所发挥作用。美容学生作为"教导伙伴"负责烫发指导、护肤及个性化建议。',
     'steps.s4h': '后续关怀<br>反思与回顾',
     'steps.s4p': '确认变化后的自己并将感受言语化。"状态卡"帮助持续维持自信。',
     'merit.u.title': '对参与者（当事人）的价值',
@@ -2227,14 +2516,14 @@ const i18n = {
     'merit.u2p': '与年龄相近的学生交流，成为回归社会的一小步。',
     'merit.u3h': '终身受益的自我护理技能',
     'merit.u3p': '学习烫发技巧、护肤和个性化风格建议等可以自己在家重现的技能，建立日常自信。',
-    'merit.s.title': '对美容学生的价值',
-    'merit.s.sub': '将技术转化为人的力量的经验',
-    'merit.s1h': '高级人际交往技能',
-    'merit.s1p': '磨练对有细腻烦恼的对方的倾听力与提案力，提升市场价值。',
+    'merit.s.title': '对新人美容师及美容学生的价值',
+    'merit.s.sub': '在真实现场磨砺真正的实力',
+    'merit.s1h': '新人实践与研修的场所',
+    'merit.s1p': '美容院第一年的新人美容师可在"具有社会意义的现场"同时磨练技术、接客能力和倾听力。',
     'merit.s2h': '体验社会意义',
     'merit.s2p': '通过"教导与陪伴"的形式，提早获得积极改变他人人生的成功体验。',
-    'merit.s3h': '积累职业履历',
-    'merit.s3p': '社会贡献活动的经历成为求职时的有力展示素材。',
+    'merit.s3h': '积累职业与品牌履历',
+    'merit.s3p': '社会贡献活动的经历成为求职和美容院品牌建设的有力展示素材。',
     'rev.t1': 'BtoG — 政府',
     'rev.h1': '与地方政府合作',
     'rev.p1': '承接"孤独·孤立对策""自立支援"事业，与行政机关协同扩大影响力。',
@@ -2330,7 +2619,8 @@ function showPage(id) {
     'inquiry-page': 'Re-Palette | お問い合わせ',
     'admin-page': 'Re-Palette | 管理画面',
     'member-page': 'Re-Palette | 会員ページ',
-    'partner-page': 'Re-Palette | 共創パートナー募集'
+    'partner-page': 'Re-Palette | 共創パートナー募集',
+    'salon-page': 'Re-Palette | サロン・美容師の方へ'
   };
   document.title = titles[id] || titles.home;
 
