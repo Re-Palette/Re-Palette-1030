@@ -1,1077 +1,444 @@
 <!DOCTYPE html>
-<html lang="ja" id="root">
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Re-Palette | 美容をすべての人の自信と一歩へ</title>
-<!-- font-display=swap で描画ブロック解消 / 不要なweightを削除 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<style>
-/* ══════════════════════════════════════
-   RESET & BASE
-══════════════════════════════════════ */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-:root{
-  --bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;
-  --red:#e02020;--red-bright:#ff2828;--red-dim:rgba(224,32,32,0.15);
-  --white:#ffffff;--gray:#888888;--gray-light:#cccccc;
-  --border:rgba(255,255,255,0.08);--border-red:rgba(224,32,32,0.3);
-  --font-display:'Bebas Neue',sans-serif;
-  --font-cond:'Barlow Condensed',sans-serif;
-  --font-body:'Noto Sans JP',sans-serif;
-  --font-mono:'Share Tech Mono',monospace;
-}
-
-body{font-family:var(--font-body);background:var(--bg);color:var(--white);overflow-x:hidden;line-height:1.6}
-
-/* PAGE SYSTEM */
-.page{display:none;min-height:100vh;opacity:0;transition:opacity .25s ease}
-.page.active{display:block;opacity:1}
-
-/* PROGRESS BAR — thin, GPU-composited */
-#prog{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:500;width:0;will-change:width}
-
-/* SCROLLBAR */
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--red)}
-
-/* ══════════════════════════════════════
-   TOP NAV — backdrop-filter軽量化
-══════════════════════════════════════ */
-.top-nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;height:52px;
-  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
-  background:rgba(10,10,10,0.97);
-  border-bottom:1px solid var(--border);
-}
-.nav-brand{display:flex;align-items:center;gap:8px;font-family:var(--font-cond);font-weight:700;font-size:1.1rem;letter-spacing:.1em;color:var(--white);cursor:pointer;border:none;background:none}
-.nav-lang-group{display:flex;gap:4px}
-.nav-lang-btn{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;padding:4px 7px;border-radius:2px;cursor:pointer;background:none;color:var(--gray);border:1px solid transparent;transition:color .2s,border-color .2s}
-.nav-lang-btn:hover,.nav-lang-btn.active{color:var(--red);border-color:var(--red)}
-.nav-actions{display:flex;gap:8px;align-items:center}
-.nav-login-btn{font-family:var(--font-cond);font-size:.75rem;font-weight:600;letter-spacing:.1em;padding:6px 14px;background:none;color:var(--gray-light);border:1px solid var(--border);cursor:pointer;transition:color .2s,border-color .2s}
-.nav-login-btn:hover{color:var(--white);border-color:var(--gray)}
-.nav-cta-btn{font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.15em;padding:7px 16px;background:var(--red);color:var(--white);border:none;cursor:pointer;transition:background .2s}
-.nav-cta-btn:hover{background:var(--red-bright)}
-
-/* ══════════════════════════════════════
-   BOTTOM NAV
-══════════════════════════════════════ */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:200;height:60px;
-  display:flex;align-items:center;
-  background:rgba(10,10,10,0.99);
-  border-top:1px solid var(--border);
-}
-.bottom-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:6px;font-family:var(--font-mono);font-size:.5rem;letter-spacing:.05em;color:var(--gray);border:none;background:none;transition:color .2s}
-.bottom-nav-item.active{color:var(--red)}
-.bottom-nav-item:hover{color:var(--gray-light)}
-.bottom-nav-item svg{width:20px;height:20px}
-.bottom-nav-item span{font-size:.48rem}
-
-/* ══════════════════════════════════════
-   HOME PAGE
-══════════════════════════════════════ */
-#home{background:var(--bg);padding-bottom:60px}
-
-/* HERO */
-.hero-section{min-height:100vh;padding:72px 20px 40px;display:flex;flex-direction:column;justify-content:flex-start;position:relative;overflow:hidden}
-
-.hero-section::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px)}
-.hero-section::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red)}
-
-.hero-eyebrow{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.25em;color:var(--red);margin-bottom:16px;position:relative;z-index:1;opacity:0;animation:fadeUp .6s .1s forwards}
-.hero-headline{position:relative;z-index:1;opacity:0;animation:fadeUp .7s .2s forwards}
-.hero-headline h1{font-family:var(--font-display);font-size:clamp(80px,25vw,140px);line-height:.88;letter-spacing:-.01em;color:var(--white);text-transform:uppercase}
-.hero-headline h1 .red-line{color:var(--red);display:inline;font-style:normal}
-.hero-sub{position:relative;z-index:1;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.8;max-width:340px;margin:20px 0 28px;opacity:0;animation:fadeUp .7s .35s forwards}
-
-/* ANALYSIS CARD */
-.analysis-card{position:relative;z-index:1;background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);margin:0 0 28px;opacity:0;animation:fadeUp .7s .45s forwards}
-.ac-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)}
-.ac-title{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;color:var(--gray)}
-.ac-live-badge{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;color:var(--red);border:1px solid var(--red);padding:2px 8px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-.ac-face-area{height:180px;display:flex;align-items:center;justify-content:center;position:relative;background:#0d0d0d;overflow:hidden}
-.ac-face-area::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(224,32,32,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(224,32,32,.06) 1px,transparent 1px);background-size:24px 24px}
-.face-oval{width:90px;height:116px;border-radius:50%;border:1.5px solid var(--red);position:relative;z-index:1}
-.face-corner{position:absolute;width:12px;height:12px;border-color:var(--red);border-style:solid}
-.fc-tl{top:8px;left:8px;border-width:1.5px 0 0 1.5px}
-.fc-tr{top:8px;right:8px;border-width:1.5px 1.5px 0 0}
-.fc-bl{bottom:8px;left:8px;border-width:0 0 1.5px 1.5px}
-.fc-br{bottom:8px;right:8px;border-width:0 1.5px 1.5px 0}
-
-.ac-metrics{padding:14px;display:flex;flex-direction:column;gap:8px}
-.metric-row{display:flex;align-items:center;gap:10px}
-.metric-label{font-family:var(--font-mono);font-size:.58rem;color:var(--gray);width:52px;flex-shrink:0}
-.metric-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.08)}
-.metric-bar{height:100%;background:var(--red);transition:width 1.2s cubic-bezier(.4,0,.2,1);will-change:width}
-.metric-val{font-family:var(--font-mono);font-size:.58rem;color:var(--white);width:26px;text-align:right;flex-shrink:0}
-
-.ac-footer{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);background:rgba(224,32,32,.04)}
-.ac-face-type{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.08em;color:var(--gray)}
-.ac-face-type span{display:block;font-family:var(--font-cond);font-size:1.1rem;font-weight:700;letter-spacing:.06em;color:var(--white);line-height:1.1}
-.ac-score{font-family:var(--font-display);font-size:2.8rem;color:var(--red);line-height:1}
-.ac-score-unit{font-family:var(--font-mono);font-size:.8rem;color:var(--red)}
-
-/* HERO BUTTONS */
-.hero-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;z-index:1;opacity:0;animation:fadeUp .7s .55s forwards}
-.btn-primary{padding:16px 20px;background:var(--red);color:var(--white);border:none;cursor:pointer;font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.1em;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s}
-.btn-primary:hover{background:var(--red-bright)}
-.btn-secondary{padding:15px 20px;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.25);cursor:pointer;font-family:var(--font-cond);font-size:1rem;font-weight:600;letter-spacing:.1em;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s}
-.btn-secondary:hover{border-color:var(--white);background:rgba(255,255,255,.06)}
-
-/* ══════════════════════════════════════
-   SECTION COMMONS
-══════════════════════════════════════ */
-.section-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;color:var(--red);margin-bottom:12px;display:block}
-.section-title{font-family:var(--font-cond);font-size:clamp(1.8rem,8vw,3rem);font-weight:900;letter-spacing:.02em;line-height:1.1;color:var(--white);margin-bottom:12px}
-.section-lead{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.9}
-.home-section{padding:60px 20px;border-top:1px solid var(--border)}
-
-/* DATA STRIP */
-.data-strip{background:var(--red);padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:60px;flex-wrap:wrap}
-.ds-stat{text-align:center}
-.ds-num{font-family:var(--font-display);font-size:2.2rem;color:var(--white);line-height:1}
-.ds-label{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.12em;color:rgba(255,255,255,.7);display:block;margin-top:2px}
-.ds-divider{width:1px;height:36px;background:rgba(255,255,255,.3)}
-
-/* PROBLEM CARDS */
-.prob-cards{display:flex;flex-direction:column;gap:10px;margin-top:28px}
-.prob-card{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--red);padding:16px 18px;display:flex;gap:14px;transition:border-color .25s,background .25s}
-.prob-card:hover{border-color:var(--border-red);background:var(--bg3)}
-.prob-num{font-family:var(--font-display);font-size:2rem;color:rgba(224,32,32,.2);line-height:1;flex-shrink:0;width:28px}
-.prob-card h3{font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.04em;color:var(--white);margin-bottom:4px}
-.prob-card p{font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.7}
-
-/* STEPS */
-.steps-list{margin-top:28px;display:flex;flex-direction:column}
-.step-item{display:flex;position:relative;opacity:0;transform:translateX(-16px);transition:opacity .5s,transform .5s;will-change:transform,opacity}
-.step-item.visible{opacity:1;transform:translateX(0)}
-.step-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:40px}
-.step-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--red);margin-top:4px}
-.step-connector{flex:1;width:1px;background:rgba(224,32,32,.2);min-height:40px}
-.step-item:last-child .step-connector{display:none}
-.step-content{flex:1;padding:0 0 28px}
-.step-tag{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.15em;color:var(--red);margin-bottom:4px}
-.step-content h3{font-family:var(--font-cond);font-size:1.15rem;font-weight:700;color:var(--white);margin-bottom:4px;letter-spacing:.04em}
-.step-content p{font-size:.76rem;color:rgba(255,255,255,.5);line-height:1.8}
-.step-time{font-family:var(--font-mono);font-size:.55rem;color:var(--gray);display:inline-block;margin-top:6px;border:1px solid var(--border);padding:2px 8px}
-
-/* VALUE CARDS */
-.value-grid{display:flex;flex-direction:column;gap:10px;margin-top:28px}
-.value-card{background:var(--bg2);border:1px solid var(--border);padding:18px;position:relative;overflow:hidden;transition:border-color .3s}
-.value-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .3s}
-.value-card:hover::before{transform:scaleX(1)}
-.value-card:hover{border-color:var(--border-red)}
-.vc-for{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;color:var(--red);margin-bottom:8px}
-.value-card h3{font-family:var(--font-cond);font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:10px;letter-spacing:.04em}
-.vc-list{display:flex;flex-direction:column;gap:6px}
-.vc-item{display:flex;align-items:flex-start;gap:8px;font-size:.75rem;color:rgba(255,255,255,.55);line-height:1.6}
-.vc-item::before{content:'→';color:var(--red);flex-shrink:0;font-size:.7rem;margin-top:1px}
-
-/* REVENUE */
-.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:28px}
-.rev-card{background:var(--bg2);border:1px solid var(--border);padding:16px;transition:border-color .25s}
-.rev-card:hover{border-color:var(--border-red)}
-.rev-tag{font-family:var(--font-mono);font-size:.52rem;color:var(--red);letter-spacing:.08em;margin-bottom:8px}
-.rev-card h3{font-family:var(--font-cond);font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px}
-.rev-card p{font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.6}
-
-/* TIMELINE */
-.tl{margin-top:28px;position:relative}
-.tl::before{content:'';position:absolute;left:28px;top:16px;bottom:0;width:1px;background:rgba(224,32,32,.2)}
-.tl-item{display:flex;gap:16px;margin-bottom:32px;opacity:0;transform:translateX(-12px);transition:opacity .5s,transform .5s;will-change:transform,opacity}
-.tl-item.visible{opacity:1;transform:translateX(0)}
-.tl-year-col{width:56px;flex-shrink:0;text-align:right;padding-top:1px;position:relative}
-.tl-year{font-family:var(--font-display);font-size:1.3rem;color:var(--red);line-height:1}
-.tl-dot{position:absolute;right:-7px;top:5px;width:8px;height:8px;border-radius:50%;background:var(--red)}
-.tl-box{flex:1;background:var(--bg2);border:1px solid var(--border);border-left:2px solid var(--red);padding:14px 16px}
-.tl-box h3{font-family:var(--font-cond);font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:6px}
-.tl-box p{font-size:.74rem;color:rgba(255,255,255,.5);line-height:1.7}
-.tl-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-.tl-tag{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.08em;padding:3px 8px;background:rgba(224,32,32,.1);color:var(--red);border:1px solid rgba(224,32,32,.2)}
-
-/* VISION */
-.vision-section{padding:60px 20px;background:linear-gradient(180deg,var(--bg) 0%,#120000 50%,var(--bg) 100%);text-align:center;border-top:1px solid var(--border)}
-.vision-big{font-family:var(--font-display);font-size:clamp(2.2rem,12vw,6rem);line-height:1;color:var(--white);margin-bottom:20px}
-.vision-big .red{color:var(--red)}
-.vision-sub-text{font-size:.82rem;color:rgba(255,255,255,.45);line-height:2;max-width:320px;margin:0 auto}
-
-/* CTA */
-.cta-section{padding:60px 20px;border-top:1px solid var(--border);background:var(--bg2)}
-.cta-card{border:1px solid var(--border-red);padding:28px 20px;text-align:center;background:rgba(224,32,32,.04);position:relative}
-.cta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
-.cta-title{font-family:var(--font-cond);font-size:1.6rem;font-weight:900;letter-spacing:.04em;color:var(--white);margin-bottom:10px}
-.cta-lead{font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.9;margin-bottom:24px}
-.cta-btns{display:flex;flex-direction:column;gap:10px}
-
-/* FOOTER */
-.site-footer{padding:24px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);padding-bottom:70px}
-.footer-brand{font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.1em;color:var(--red)}
-.footer-copy{font-family:var(--font-mono);font-size:.52rem;color:rgba(255,255,255,.2)}
-.footer-sns{display:flex;gap:10px}
-.sns-icon{width:32px;height:32px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s;text-decoration:none}
-.sns-icon:hover{border-color:var(--red)}
-.sns-icon svg{width:14px;height:14px;fill:var(--gray)}
-.sns-icon:hover svg{fill:var(--red)}
-
-/* ══════════════════════════════════════
-   SERVICE PAGE
-══════════════════════════════════════ */
-#service{background:var(--bg);padding-bottom:60px}
-.svc-hero{min-height:50vh;padding:80px 20px 40px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--border);position:relative}
-.svc-hero::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
-
-/* FLOW CARDS */
-.flow-section{padding:40px 20px}
-.flow-stack{display:flex;flex-direction:column;gap:12px}
-.flow-card{border:1px solid var(--border);background:var(--bg2);padding:20px 18px;position:relative;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s;will-change:transform,opacity}
-.flow-card.visible{opacity:1;transform:translateY(0)}
-.flow-card.main-card{border-color:var(--red);background:rgba(224,32,32,.06)}
-.flow-card.main-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
-.fc-time{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--red);margin-bottom:8px}
-.fc-step{font-family:var(--font-mono);font-size:.52rem;color:var(--gray);letter-spacing:.15em;margin-bottom:6px}
-.flow-card h3{font-family:var(--font-cond);font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:.04em}
-.main-card h3{font-size:1.6rem}
-.flow-card p{font-size:.76rem;color:rgba(255,255,255,.5);line-height:1.8}
-.fc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.fc-tag{font-family:var(--font-mono);font-size:.52rem;padding:3px 9px;border:1px solid var(--border);color:var(--gray)}
-.main-card .fc-tag{border-color:var(--border-red);color:var(--red)}
-
-/* DETAIL */
-.detail-section{padding:0 20px 40px}
-.detail-box{border:1px solid var(--border-red);background:rgba(224,32,32,.04);padding:22px 18px}
-.detail-badge{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--red);margin-bottom:12px;display:block}
-.detail-box h3{font-family:var(--font-cond);font-size:1.4rem;font-weight:900;color:var(--white);margin-bottom:12px}
-.detail-box p{font-size:.78rem;color:rgba(255,255,255,.55);line-height:1.9;margin-bottom:14px}
-.role-table{background:var(--bg);border:1px solid var(--border);margin-top:14px}
-.role-row{display:grid;grid-template-columns:90px 1fr;border-bottom:1px solid var(--border);font-size:.74rem}
-.role-row:last-child{border-bottom:none}
-.role-label{padding:10px 12px;background:rgba(224,32,32,.08);font-family:var(--font-mono);font-size:.58rem;color:var(--red);letter-spacing:.06em;display:flex;align-items:flex-start;padding-top:12px;border-right:1px solid var(--border)}
-.role-val{padding:10px 12px;color:rgba(255,255,255,.55);line-height:1.7}
-
-/* PARTNER / SALON / CONTACT / INQUIRY */
-#partner-page,#salon-page,#contact-page,#inquiry-page{background:var(--bg);padding-bottom:60px}
-.dark-page-header{padding:72px 20px 40px;border-bottom:1px solid var(--border);position:relative}
-.dark-page-header::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
-
-/* PARTNER CARDS */
-.partner-section{padding:40px 20px;border-bottom:1px solid var(--border)}
-.pc-grid{display:flex;flex-direction:column;gap:10px;margin-top:24px}
-.pc-item{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--red);padding:18px 16px;transition:border-color .25s,background .25s}
-.pc-item:hover{border-color:var(--border-red);background:var(--bg3)}
-.pc-num{font-family:var(--font-mono);font-size:.58rem;color:var(--red);letter-spacing:.12em;margin-bottom:4px}
-.pc-item h3{font-family:var(--font-cond);font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:2px}
-.pc-sub{font-family:var(--font-mono);font-size:.55rem;color:var(--gray);margin-bottom:8px}
-.pc-item p{font-size:.74rem;color:rgba(255,255,255,.45);line-height:1.7}
-
-/* MIND */
-.mind-list{display:flex;flex-direction:column;gap:12px;margin-top:24px}
-.mind-item{display:flex;gap:12px;align-items:flex-start;font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.7}
-.mind-icon{width:28px;height:28px;flex-shrink:0;background:rgba(224,32,32,.1);border:1px solid var(--border-red);display:flex;align-items:center;justify-content:center;font-size:.8rem}
-.mind-item strong{color:var(--white)}
-
-/* FORM */
-.form-section{padding:40px 20px}
-.form-card{border:1px solid var(--border);background:var(--bg2);padding:24px 20px}
-.fg{margin-bottom:18px}
-.fg label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;color:var(--gray);display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.fg label .req{font-size:.5rem;padding:1px 5px;background:var(--red);color:white;letter-spacing:0}
-.fg label .opt{color:rgba(255,255,255,.3)}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.fi,.ft,.fs{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s}
-.fi:focus,.ft:focus,.fs:focus{border-color:var(--red)}
-.fi::placeholder,.ft::placeholder{color:rgba(255,255,255,.2)}
-.ft{resize:vertical;min-height:140px;line-height:1.8}
-.fs{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
-.fs option{background:var(--bg2)}
-.form-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-.form-submit{width:100%;padding:16px;background:var(--red);color:var(--white);border:none;cursor:pointer;font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.15em;transition:background .2s}
-.form-submit:hover{background:var(--red-bright)}
-.form-note{font-family:var(--font-mono);font-size:.58rem;color:rgba(255,255,255,.25);text-align:center;margin-top:14px;line-height:1.9}
-
-/* SALON */
-.salon-problem-grid{display:flex;flex-direction:column;gap:10px;margin-top:24px}
-.salon-before,.salon-after{background:var(--bg2);border:1px solid var(--border);padding:18px}
-.salon-after{border-left:3px solid var(--red)}
-.sp-head{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;margin-bottom:12px}
-.salon-before .sp-head{color:var(--gray)}
-.salon-after .sp-head{color:var(--red)}
-.sp-list{list-style:none;display:flex;flex-direction:column;gap:7px}
-.sp-list li{font-size:.76rem;color:rgba(255,255,255,.5);line-height:1.6;padding-left:16px;position:relative}
-.sp-list li::before{content:'✗';position:absolute;left:0;color:var(--gray);font-size:.65rem}
-.sp-list.sp-ok li::before{content:'✓';color:var(--red)}
-.sp-list.sp-ok li{color:rgba(255,255,255,.7)}
-.salon-value-grid{display:flex;flex-direction:column;gap:10px;margin-top:24px}
-.sv-card{background:var(--bg2);border:1px solid var(--border);padding:18px}
-.sv-num{font-family:var(--font-display);font-size:2.5rem;color:rgba(224,32,32,.12);line-height:1;margin-bottom:4px}
-.sv-card h3{font-family:var(--font-cond);font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:6px}
-.sv-card p{font-size:.74rem;color:rgba(255,255,255,.45);line-height:1.8}
-
-/* ADMIN / MEMBER */
-#admin-page,#member-page{background:var(--bg);padding-bottom:60px}
-.dark-nav{position:sticky;top:0;z-index:200;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(10,10,10,0.98);border-bottom:1px solid var(--border)}
-.dark-page-section{padding:32px 20px}
-.dp-card{background:var(--bg2);border:1px solid var(--border);padding:24px;margin-bottom:16px}
-.dp-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.15em;color:var(--red);margin-bottom:16px;display:block}
-.post-type-sel,.post-input,.post-textarea,.post-file{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:.88rem;outline:none;transition:border-color .2s;margin-bottom:12px}
-.post-type-sel:focus,.post-input:focus,.post-textarea:focus{border-color:var(--red)}
-.post-textarea{resize:vertical;min-height:100px;line-height:1.7}
-.post-file{color:var(--gray);cursor:pointer}
-.post-btn{width:100%;padding:13px;background:var(--red);color:var(--white);border:none;cursor:pointer;font-family:var(--font-cond);font-size:.95rem;font-weight:700;letter-spacing:.1em}
-.ap-card{background:var(--bg);border:1px solid var(--border);padding:14px;margin-bottom:8px;position:relative}
-.ap-meta{display:flex;gap:8px;align-items:center;margin-bottom:6px}
-.ap-tag{font-family:var(--font-mono);font-size:.52rem;padding:2px 7px;background:rgba(224,32,32,.1);color:var(--red);border:1px solid var(--border-red)}
-.ap-date{font-family:var(--font-mono);font-size:.5rem;color:var(--gray)}
-.ap-title{font-family:var(--font-cond);font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px}
-.ap-body{font-size:.75rem;color:rgba(255,255,255,.45);line-height:1.6}
-.ap-img{width:70px;height:50px;object-fit:cover;margin:6px 4px 0 0}
-.ap-del{position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;font-size:.72rem;color:var(--gray)}
-.ap-del:hover{color:var(--red)}
-.admin-scroll{max-height:480px;overflow-y:auto}
-.mp-card{background:var(--bg2);border:1px solid var(--border);border-left:2px solid var(--red);padding:22px 18px;margin-bottom:12px}
-.mp-meta{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.mp-tag{font-family:var(--font-mono);font-size:.52rem;padding:2px 7px;background:rgba(224,32,32,.1);color:var(--red);border:1px solid var(--border-red)}
-.mp-date{font-family:var(--font-mono);font-size:.5rem;color:var(--gray)}
-.mp-title{font-family:var(--font-cond);font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:6px}
-.mp-body{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.8}
-.mp-gallery{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.mp-img{width:120px;height:80px;object-fit:cover;cursor:pointer;transition:opacity .2s}
-.mp-img:hover{opacity:.8}
-
-/* AUTH MODAL */
-.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.open{opacity:1;pointer-events:all}
-.modal-box{background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);width:min(400px,92vw);padding:36px 28px;position:relative;max-height:90vh;overflow-y:auto;transform:translateY(16px);transition:transform .25s;will-change:transform}
-.modal-overlay.open .modal-box{transform:translateY(0)}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--gray);cursor:pointer;font-size:1rem;transition:color .2s}
-.modal-close:hover{color:var(--red)}
-.modal-header-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;color:var(--red);margin-bottom:8px}
-.modal-title{font-family:var(--font-cond);font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:24px;letter-spacing:.04em}
-.auth-tabs{display:flex;margin-bottom:20px}
-.auth-tab{flex:1;padding:10px;border:1px solid var(--border);cursor:pointer;font-family:var(--font-cond);font-size:.85rem;font-weight:600;letter-spacing:.06em;color:var(--gray);background:none;transition:all .2s}
-.auth-tab.active{border-color:var(--red);color:var(--white);background:rgba(224,32,32,.1)}
-.auth-sub{font-size:.72rem;color:rgba(255,255,255,.4);margin-bottom:16px;text-align:center}
-.google-btn{width:100%;padding:11px;border:1px solid var(--border);background:var(--bg);color:var(--gray-light);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-cond);font-size:.88rem;font-weight:600;transition:border-color .2s,color .2s;margin-bottom:16px}
-.google-btn:hover{border-color:var(--gray);color:var(--white)}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--gray);font-size:.65rem;font-family:var(--font-mono);letter-spacing:.08em}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.mf-group{margin-bottom:14px}
-.mf-group label{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--gray);display:block;margin-bottom:5px}
-.mf-input{width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s}
-.mf-input:focus{border-color:var(--red)}
-.pw-wrap{position:relative}
-.pw-wrap .mf-input{padding-right:42px}
-.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray);font-size:.9rem}
-.login-error{color:var(--red);font-size:.72rem;min-height:1em;margin:4px 0 8px;text-align:center;font-family:var(--font-mono)}
-.modal-submit{width:100%;padding:13px;background:var(--red);color:var(--white);border:none;cursor:pointer;font-family:var(--font-cond);font-size:.95rem;font-weight:700;letter-spacing:.12em;transition:background .2s;margin-top:6px}
-.modal-submit:hover{background:var(--red-bright)}
-.admin-submit{background:rgba(224,32,32,.3)!important}
-.admin-login-wrap{border:1px dashed var(--border);padding:14px;margin-top:14px}
-.auth-switch{text-align:center;font-size:.7rem;color:var(--gray);margin-top:12px}
-.auth-switch a{color:var(--red);cursor:pointer;text-decoration:underline}
-.login-nav-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid var(--border);background:none;color:var(--gray-light);cursor:pointer;font-family:var(--font-cond);font-size:.75rem;font-weight:600;letter-spacing:.08em;transition:all .2s}
-.login-nav-btn:hover{border-color:var(--red);color:var(--white)}
-.login-nav-btn.logged-in{padding:0;width:34px;height:34px;border:1px solid var(--border-red);background:rgba(224,32,32,.1);position:relative}
-.user-avatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-family:var(--font-cond);font-weight:700;color:var(--red)}
-.user-avatar-img{width:34px;height:34px;object-fit:cover;display:block}
-.user-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:190px;background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);padding:12px;z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s;will-change:transform,opacity}
-.user-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
-.ud-name{font-family:var(--font-cond);font-size:.9rem;font-weight:700;color:var(--white)}
-.ud-email{font-family:var(--font-mono);font-size:.55rem;color:var(--gray);margin-bottom:10px;word-break:break-all}
-.ud-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
-.ud-item{width:100%;display:flex;align-items:center;gap:7px;padding:8px;border:none;background:none;cursor:pointer;font-family:var(--font-mono);font-size:.62rem;color:var(--gray);transition:color .2s,background .2s;text-align:left;letter-spacing:.05em}
-.ud-item:hover{color:var(--red);background:rgba(224,32,32,.06)}
-
-/* LIGHTBOX */
-#lightbox{background:rgba(0,0,0,.9)}
-
-/* ══════════════════════════════════════
-   ANIMATIONS
-══════════════════════════════════════ */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
-@media(min-width:768px){
-  .hero-section{padding:80px 48px 60px;max-width:600px;margin:0 auto}
-  .analysis-card{max-width:460px}
-  .hero-btns{max-width:400px}
-  .home-section{padding:80px 48px;max-width:900px;margin:0 auto}
-  .data-strip{padding:20px 48px}
-  .rev-grid{grid-template-columns:repeat(4,1fr)}
-  .salon-problem-grid{flex-direction:row}
-  .salon-value-grid{display:grid;grid-template-columns:repeat(3,1fr)}
-  .pc-grid{display:grid;grid-template-columns:1fr 1fr}
-  .form-section,.flow-section,.detail-section,.partner-section{padding-left:48px;padding-right:48px;max-width:900px;margin:0 auto}
-  .dark-page-section{padding:32px 48px;max-width:900px;margin:0 auto}
-  .cta-section{padding:80px 48px}
-  .cta-card{max-width:560px;margin:0 auto}
-  .cta-btns{flex-direction:row;justify-content:center;gap:12px}
-  .fg-row{gap:18px}
-  .flow-stack{display:grid;grid-template-columns:1fr 1fr 1fr 1fr}
-  .flow-card{display:flex;flex-direction:column}
-  .dark-page-header{padding:72px 48px 40px}
-  .site-footer{padding:24px 48px 80px}
-  .bottom-nav{display:none}
-  .top-nav{padding:0 48px}
-  .top-nav .h-nav-links-desktop{display:flex;gap:28px;list-style:none}
-  .top-nav .h-nav-links-desktop a{font-family:var(--font-cond);font-size:.8rem;font-weight:600;letter-spacing:.1em;color:var(--gray);text-decoration:none;transition:color .2s}
-  .top-nav .h-nav-links-desktop a:hover{color:var(--white)}
-  .svc-hero{padding:80px 48px 50px}
-}
-@media(min-width:1024px){
-  .hero-section{max-width:1100px;flex-direction:row;gap:80px;align-items:center;padding:90px 80px 60px}
-  .hero-left{flex:1}
-  .hero-right-col{flex:1}
-  .analysis-card{max-width:100%}
-  .hero-btns{max-width:100%}
-  .home-section{max-width:1100px;padding:100px 80px}
-  .site-footer{padding:28px 80px}
-  .bottom-nav{display:none}
-}
-.h-nav-links-desktop{display:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Re-Palette | 美容を、社会復帰のインフラへ</title>
+    <meta name="description" content="Re-Paletteは、美容を通じた社会復帰支援事業です。不登校児・ひきこもり当事者など社会との接点に課題を抱える方々に対し、自己肯定感を回復し、社会への第一歩を支援します。">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
-<div id="prog"></div>
-
-<!-- HOME PAGE -->
-<div id="home" class="page active">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <ul class="h-nav-links-desktop">
-      <li><a href="#" onclick="scrollToSection('problem-sec');return false;" data-i18n="nav.problem">課題</a></li>
-      <li><a href="#" onclick="showPage('service');return false;" data-i18n="nav.steps">サービス</a></li>
-      <li><a href="#" onclick="showPage('salon-page');return false;" style="color:#e02020">サロン向け</a></li>
-      <li><a href="#" onclick="showPage('partner-page');return false;" style="color:#e02020">パートナー</a></li>
-    </ul>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="nav-lang-group" id="home-lang">
-        <button class="nav-lang-btn active" onclick="setLang('ja')">JP</button>
-        <button class="nav-lang-btn" onclick="setLang('en')">EN</button>
-        <button class="nav-lang-btn" onclick="setLang('ko')">KR</button>
-        <button class="nav-lang-btn" onclick="setLang('zh')">CN</button>
-      </div>
-      <button class="login-nav-btn" onclick="openLoginModal()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        LOGIN
-      </button>
-      <button class="nav-cta-btn" onclick="showPage('contact-page')">お問い合わせ</button>
-    </div>
-  </nav>
-
-  <section class="hero-section">
-    <div class="hero-left">
-      <p class="hero-eyebrow">BEAUTY FOR EVERYONE</p>
-      <div class="hero-headline">
-        <h1 style="white-space:nowrap;font-size:clamp(48px,14vw,110px)">Re-Palette<span class="red-line">.</span></h1>
-      </div>
-      <p class="hero-sub" style="font-size:1.05rem;color:rgba(255,255,255,.75);max-width:400px;line-height:2;" data-i18n="hero.lead">美容を、すべての人の<br><strong style="color:#fff;">自信と一歩</strong>へ。</p>
-      <p style="font-family:var(--font-mono);font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.12em;line-height:2;max-width:360px;margin-bottom:32px;opacity:0;animation:fadeUp .7s .5s forwards">不登校・ひきこもりの背景にある「見た目への自信の欠如」を、<br>美容という身近なアプローチで解決する社会復帰支援プログラム。</p>
-
-      <div class="hero-btns">
-        <button class="btn-primary" onclick="showPage('contact-page')" data-i18n="hero.cta1">お問い合わせ</button>
-        <button class="btn-secondary" onclick="showPage('service')" data-i18n="hero.cta2">サービスを見る</button>
-      </div>
-    </div>
-  </section>
-
-  <div class="data-strip">
-    <div class="ds-stat"><div class="ds-num">34<sup style="font-size:.5em">万</sup></div><span class="ds-label">SCHOOL REFUSAL</span></div>
-    <div class="ds-divider"></div>
-    <div class="ds-stat"><div class="ds-num">146<sup style="font-size:.5em">万</sup></div><span class="ds-label">HIKIKOMORI EST.</span></div>
-    <div class="ds-divider"></div>
-    <div class="ds-stat"><div class="ds-num">Re-P</div><span class="ds-label">FILLS THE GAP</span></div>
-  </div>
-
-  <section class="home-section" id="problem-sec">
-    <span class="section-label">// SOCIAL CHALLENGE</span>
-    <h2 class="section-title" data-i18n="problem.title">解決する<br>社会課題</h2>
-    <p class="section-lead" data-i18n="problem.lead">不登校・ひきこもりの背景には「外見への自信の欠如」という見えない壁が存在します。医療と就労支援の"あいだ"の空白を、Re-Paletteが埋めます。</p>
-    <div class="prob-cards">
-      <div class="prob-card"><span class="prob-num">01</span><div><h3 data-i18n="problem.c1t">見えない壁</h3><p data-i18n="problem.c1p">鏡を見ることが苦痛で外出できない。外見への自信の喪失が、社会復帰の第一歩を阻んでいます。</p></div></div>
-      <div class="prob-card"><span class="prob-num">02</span><div><h3 data-i18n="problem.c2t">支援のミッシングリンク</h3><p data-i18n="problem.c2p">医療（内面のケア）と就労支援のあいだに、「外に出るための自信」を育む場が不足しています。</p></div></div>
-      <div class="prob-card"><span class="prob-num">03</span><div><h3 data-i18n="problem.c3t">Re-Paletteの答え</h3><p data-i18n="problem.c3p">美容という身近なアプローチで空白を埋め、美容学生との共創が新たな可能性を開きます。</p></div></div>
-    </div>
-  </section>
-
-  <section class="home-section">
-    <span class="section-label">// OUR APPROACH</span>
-    <h2 class="section-title" data-i18n="steps.title">4ステップで<br>自己肯定感を回復</h2>
-    <p class="section-lead" data-i18n="steps.lead">参加者の心理的安全性を最優先に、段階的に自信と繋がりを育みます。</p>
-    <div class="steps-list">
-      <div class="step-item"><div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div><div class="step-content"><div class="step-tag">STEP 01 · PRE-MENTORING</div><h3 data-i18n="steps.s1h">プレ・メンタリング</h3><p data-i18n="steps.s1p">美容学生と1対1の対話で信頼関係を構築。「パス可能ルール」で自分のペースを守れます。</p><span class="step-time">DURATION: 15 MIN</span></div></div>
-      <div class="step-item"><div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div><div class="step-content"><div class="step-tag">STEP 02 · ASSESSMENT</div><h3 data-i18n="steps.s2h">共創アセスメント</h3><p data-i18n="steps.s2p">鏡を見ながら悩みを可視化し、「どんな自分なら外に出やすいか」を一緒に探ります。</p><span class="step-time">DURATION: 30 MIN</span></div></div>
-      <div class="step-item"><div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div><div class="step-content"><div class="step-tag">STEP 03 · WORKSHOP [MAIN]</div><h3 data-i18n="steps.s3h">共創ワークショップ</h3><p data-i18n="steps.s3p">施術はサロンの新人美容師が担当。美容学生は「教えるパートナー」としてアイロン指導・スキンケア・似合わせ提案を行います。</p><span class="step-time">DURATION: 150 MIN</span></div></div>
-      <div class="step-item"><div class="step-line"><div class="step-dot"></div><div class="step-connector"></div></div><div class="step-content"><div class="step-tag">STEP 04 · AFTERCARE</div><h3 data-i18n="steps.s4h">アフターケア & リフレクション</h3><p data-i18n="steps.s4p">変化した自分を確認し感情を言語化。「ステータスカード」が自信の持続をサポート。</p><span class="step-time">DURATION: 20 MIN</span></div></div>
-    </div>
-  </section>
-
-  <section class="home-section">
-    <span class="section-label">// CO-CREATION VALUE</span>
-    <h2 class="section-title" data-i18n="merit.title">双方が成長する<br>共創の場</h2>
-    <div class="value-grid">
-      <div class="value-card"><div class="vc-for">FOR PARTICIPANTS</div><h3 data-i18n="merit.u.title">参加者（当事者）への価値</h3><div class="vc-list"><div class="vc-item" data-i18n="merit.u1h">自己肯定感の回復 — 外見が整うことで自然と外出意欲が向上</div><div class="vc-item" data-i18n="merit.u2h">対人リハビリテーション — 年齢の近い学生との交流でスモールステップ</div><div class="vc-item" data-i18n="merit.u3h">一生モノのセルフケア技術 — 自宅で再現できるスキルを習得</div></div></div>
-      <div class="value-card"><div class="vc-for">FOR BEAUTICIANS</div><h3 data-i18n="merit.s.title">新人美容師・美容学生への価値</h3><div class="vc-list"><div class="vc-item" data-i18n="merit.s1h">新人の実践・研修の場 — 技術・接客・傾聴力を同時に習得</div><div class="vc-item" data-i18n="merit.s2h">社会的意義の体感 — 人の人生を変える成功体験を早期獲得</div><div class="vc-item" data-i18n="merit.s3h">キャリアの実績づくり — 就職・ブランディングの強力な素材</div></div></div>
-    </div>
-  </section>
-
-  <section class="home-section">
-    <span class="section-label">// BUSINESS MODEL</span>
-    <h2 class="section-title" data-i18n="revenue.title">収益モデル</h2>
-    <div class="rev-grid">
-      <div class="rev-card"><div class="rev-tag">BtoG</div><h3 data-i18n="rev.h1">行政連携</h3><p data-i18n="rev.p1">自治体の孤独・孤立対策事業を受託</p></div>
-      <div class="rev-card"><div class="rev-tag">BtoB-1</div><h3 data-i18n="rev.h2">施設導入</h3><p data-i18n="rev.p2">通信制高校・フリースクールへの特別カリキュラム</p></div>
-      <div class="rev-card"><div class="rev-tag">BtoB-2</div><h3 data-i18n="rev.h3">企業連携</h3><p data-i18n="rev.p3">美容室リクルーティング・メーカー協賛</p></div>
-      <div class="rev-card"><div class="rev-tag">BtoC</div><h3 data-i18n="rev.h4">ギフト券</h3><p data-i18n="rev.p4">「自信を贈る」体験チケット個人販売</p></div>
-    </div>
-  </section>
-
-  <section class="home-section">
-    <span class="section-label">// ROADMAP</span>
-    <h2 class="section-title" data-i18n="roadmap.title">ロードマップ</h2>
-    <div class="tl">
-      <div class="tl-item"><div class="tl-year-col"><div class="tl-year">2026</div><div class="tl-dot"></div></div><div class="tl-box"><h3 data-i18n="rm.h1">プロトタイプ実施・効果検証</h3><p data-i18n="rm.p1">パイロットプログラムを実施し、参加者の変化データを蓄積。</p><div class="tl-tags"><span class="tl-tag" data-i18n="rm.tag1a">試験運用</span><span class="tl-tag" data-i18n="rm.tag1b">データ収集</span></div></div></div>
-      <div class="tl-item"><div class="tl-year-col"><div class="tl-year">2027</div><div class="tl-dot"></div></div><div class="tl-box"><h3 data-i18n="rm.h2">自治体実証・法人化・10拠点</h3><p data-i18n="rm.p2">自治体との実証実験を開始し法人化、全国10拠点へ拡大。</p><div class="tl-tags"><span class="tl-tag" data-i18n="rm.tag2a">法人化</span><span class="tl-tag" data-i18n="rm.tag2b">行政連携</span><span class="tl-tag" data-i18n="rm.tag2c">10拠点</span></div></div></div>
-      <div class="tl-item"><div class="tl-year-col"><div class="tl-year">2028</div><div class="tl-dot"></div></div><div class="tl-box"><h3 data-i18n="rm.h3">全国展開・認定資格制度創設</h3><p data-i18n="rm.p3">全国展開を達成。「福祉美容対人スキル」認定資格制度を創設。</p><div class="tl-tags"><span class="tl-tag" data-i18n="rm.tag3a">全国展開</span><span class="tl-tag" data-i18n="rm.tag3b">資格制度</span></div></div></div>
-    </div>
-  </section>
-
-  <div class="vision-section">
-    <div class="vision-big">ONE<br>MORE<br><span class="red">CHANCE.</span></div>
-    <p class="vision-sub-text" data-i18n="vision.q">一度立ち止まっても、何度でも自分を塗り直せる。誰もが再チャレンジできる社会を、美容から。</p>
-  </div>
-
-  <div class="cta-section">
-    <div class="cta-card">
-      <p class="cta-title" data-i18n="contact.title">ご支援・ご連携のご相談</p>
-      <p class="cta-lead" data-i18n="contact.lead">行政・教育機関・企業・美容学校など、幅広いパートナーとの連携を求めています。</p>
-      <div class="cta-btns">
-        <button class="btn-primary" onclick="showPage('contact-page')" data-i18n="contact.btn">無料相談フォームへ →</button>
-        <button class="btn-secondary" onclick="showPage('partner-page')" data-i18n="pr.navbtn">共創パートナー募集</button>
-        <button class="btn-secondary" onclick="showPage('salon-page')">✂ サロン向け</button>
-      </div>
-      <p style="font-family:var(--font-mono);font-size:.6rem;color:rgba(255,255,255,.3);margin-top:20px;" data-i18n="contact.name">鈴木 陽大 — 代表 ／ 羽田国際高等学校 2年</p>
-    </div>
-  </div>
-
-  <div style="border-top:1px solid var(--border);padding:20px 20px 24px;background:var(--bg);text-align:center;">
-    <span style="font-family:var(--font-mono);font-size:.55rem;letter-spacing:.15em;color:var(--gray);display:block;margin-bottom:10px;">// RELATED SITE</span>
-    <a href="https://re-palette.github.io/Re-Palettebeta/" target="_blank" rel="noopener" style="font-family:var(--font-cond);font-size:.85rem;font-weight:600;letter-spacing:.1em;color:var(--gray-light);text-decoration:none;border:1px solid var(--border);padding:8px 20px;display:inline-flex;align-items:center;gap:8px;transition:border-color .2s,color .2s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='var(--gray-light)'">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Re-Palette β サイトへ
-    </a>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-brand">Re-Palette</div>
-    <div class="footer-sns">
-      <a href="https://www.instagram.com/repalette_official" target="_blank" class="sns-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-    </div>
-    <div class="footer-copy">© 2025 Re-Palette. ALL RIGHTS RESERVED.</div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <button class="bottom-nav-item active" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></button>
-    <button class="bottom-nav-item" onclick="showPage('contact-page')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>お問い合わせ</span></button>
-    <button class="bottom-nav-item" onclick="showPage('partner-page')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>パートナー</span></button>
-    <button class="bottom-nav-item" onclick="showPage('salon-page')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>サロン</span></button>
-    <button class="bottom-nav-item" onclick="showPage('service')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span>サービス</span></button>
-    <button class="bottom-nav-item" onclick="openLoginModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>記録</span></button>
-  </nav>
-</div>
-
-
-<!-- SERVICE PAGE -->
-<div id="service" class="page">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <button class="nav-back" onclick="showPage('home')" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.7rem;color:var(--gray);letter-spacing:.1em;" data-i18n="svc.back">← BACK</button>
-    <button class="nav-cta-btn" onclick="showPage('contact-page')">お問い合わせ</button>
-  </nav>
-  <div class="svc-hero">
-    <span class="section-label">// SERVICE DETAIL</span>
-    <h1 class="section-title" data-i18n="svc.title">約4時間の<br>本格イベントフロー</h1>
-    <p class="section-lead" data-i18n="svc.lead">参加者の心理的安全性を最優先に、4つのフェーズを通じて自己肯定感の回復と社会復帰への第一歩をサポートします。</p>
-    <div style="margin-top:16px;display:inline-block;border:1px solid var(--border-red);padding:8px 16px;">
-      <span style="font-family:var(--font-mono);font-size:.58rem;color:var(--gray);letter-spacing:.12em;" data-i18n="svc.totalLabel">TOTAL DURATION</span>
-      <span style="font-family:var(--font-display);font-size:1.8rem;color:var(--red);margin-left:12px;">4H</span>
-    </div>
-  </div>
-  <div class="flow-section">
-    <div class="flow-stack">
-      <div class="flow-card"><div class="fc-time">15 MIN</div><div class="fc-step">STEP 01 · ICE BREAK</div><h3>アイスブレイク</h3><p>参加者同士でのコミュニティ作成</p><div class="fc-tags"><span class="fc-tag">緊張をほぐす</span><span class="fc-tag">相互紹介</span></div></div>
-      <div class="flow-card"><div class="fc-time">30 MIN</div><div class="fc-step">STEP 02 · MENTORING</div><h3>メンタリング</h3><p>個別のリスペクトと合意形成</p><div class="fc-tags"><span class="fc-tag">1対1対話</span><span class="fc-tag">パス可能</span></div></div>
-      <div class="flow-card main-card"><div class="fc-time">150 MIN</div><div class="fc-step">STEP 03 · MAIN SESSION</div><h3>共創ワークショップ</h3><p>新人美容師が実践の場として施術。美容学生は伴走者としてセルフケア指導を担当</p><div class="fc-tags"><span class="fc-tag">新人美容師カット</span><span class="fc-tag">新人研修の場</span><span class="fc-tag">セルフケア指導</span></div></div>
-      <div class="flow-card"><div class="fc-time">20 MIN</div><div class="fc-step">STEP 04 · REFLECTION</div><h3>リフレクション</h3><p>変化の可視化・フィードバック</p><div class="fc-tags"><span class="fc-tag">ステータスカード</span><span class="fc-tag">言語化</span></div></div>
-    </div>
-  </div>
-  <div class="detail-section">
-    <div class="detail-box">
-      <span class="detail-badge">✂ STEP 03 · 150 MIN · MAIN SESSION</span>
-      <h3>共創ワークショップ — 役割分担</h3>
-      <p>カット・眉などの施術はサロンの新人美容師が担当。Re-Paletteは新人の実践・研修の場として機能します。美容学生は「伴走者・教育パートナー」として参加者にセルフケアをレクチャーします。</p>
-      <div class="role-table">
-        <div class="role-row"><div class="role-label">サロン新人</div><div class="role-val">カット・眉など刃物を使う施術全般・安全管理</div></div>
-        <div class="role-row"><div class="role-label">美容学生</div><div class="role-val">セルフアイロン指導・似合わせ提案・スキンケアレクチャー・ステータスカード記入</div></div>
-        <div class="role-row"><div class="role-label">鈴木（運営）</div><div class="role-val">場の管理・自治体連携・自己肯定感データの数値化</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="cta-section">
-    <div class="cta-card">
-      <p class="cta-title" data-i18n="svc.ctaTitle">一緒に、架け橋を作りませんか？</p>
-      <p class="cta-lead" data-i18n="svc.ctaLead">行政・教育機関・企業・美容学校など、幅広いパートナーとの連携を求めています。</p>
-      <div class="cta-btns">
-        <button class="btn-primary" onclick="showPage('contact-page')" data-i18n="svc.ctaBtn">お問い合わせ →</button>
-        <button class="btn-secondary" onclick="showPage('home')" data-i18n="svc.goHome">ホームへ戻る</button>
-      </div>
-    </div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette. ALL RIGHTS RESERVED.</div></footer>
-  <nav class="bottom-nav">
-    <button class="bottom-nav-item" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></button>
-    <button class="bottom-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span>サービス</span></button>
-  </nav>
-</div>
-
-
-<!-- CONTACT PAGE -->
-<div id="contact-page" class="page">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <button onclick="showPage('home')" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.7rem;color:var(--gray);letter-spacing:.1em;">← BACK</button>
-    <span style="font-family:var(--font-mono);font-size:.6rem;color:var(--red);">FREE CONSULT</span>
-  </nav>
-  <div class="dark-page-header">
-    <span class="section-label">// FREE CONSULTATION</span>
-    <h1 class="section-title">無料相談<br>フォーム</h1>
-    <p class="section-lead">お気軽にご相談ください。通常2〜3営業日以内にご返信いたします。</p>
-  </div>
-  <div class="form-section">
-    <div class="form-card">
-      <form action="mailto:mypalette1030@outlook.com" method="POST" enctype="text/plain" onsubmit="return confirmSubmit()">
-        <div class="fg-row">
-          <div class="fg"><label>お名前 <span class="req">必須</span></label><input type="text" name="お名前" class="fi" placeholder="鈴木 陽大" required></div>
-          <div class="fg"><label>メールアドレス <span class="req">必須</span></label><input type="email" name="メールアドレス" class="fi" placeholder="email@example.com" required></div>
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-palette"></i></span>
+                Re-Palette<span class="dot">.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#issues" class="nav-link">Issues</a></li>
+                <li><a href="#flow" class="nav-link">Flow</a></li>
+                <li><a href="#merits" class="nav-link">Merits</a></li>
+                <li><a href="#contact" class="btn nav-btn">Join Us</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
         </div>
-        <div class="fg"><label>電話番号 <span class="opt">任意</span></label><input type="tel" name="電話番号" class="fi" placeholder="090-0000-0000"></div>
-        <hr class="form-divider">
-        <div class="fg"><label>ご相談内容 <span class="req">必須</span></label><textarea name="ご相談内容" class="ft" placeholder="ご質問・ご相談内容をご自由にお書きください。" required></textarea></div>
-        <button type="submit" class="form-submit">送信する →</button>
-        <p class="form-note">※ お送りいただいた情報はご相談対応のみに使用します。<br>※ メールアプリが開きます。送信ボタンを押してお送りください。</p>
-      </form>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-nav">
+        <ul class="mobile-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#issues">Issues</a></li>
+            <li><a href="#flow">Flow</a></li>
+            <li><a href="#merits">Merits</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </div>
-    <div style="text-align:center;margin-top:20px"><button class="btn-secondary" onclick="showPage('home')" style="cursor:pointer;padding:12px 28px">← ホームに戻る</button></div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette.</div></footer>
-  <nav class="bottom-nav"><button class="bottom-nav-item" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></button></nav>
-</div>
 
-
-<!-- INQUIRY PAGE -->
-<div id="inquiry-page" class="page">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <button onclick="showPage('home')" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.7rem;color:var(--gray);letter-spacing:.1em;">← BACK</button>
-    <span style="font-family:var(--font-mono);font-size:.6rem;color:var(--red);">CONTACT</span>
-  </nav>
-  <div class="dark-page-header">
-    <span class="section-label">// CONTACT US</span>
-    <h1 class="section-title">お問い合わせ<br>フォーム</h1>
-    <p class="section-lead">行政・企業・教育機関・美容学校など、連携・支援に関するご相談はこちらから。</p>
-  </div>
-  <div class="form-section">
-    <div class="form-card">
-      <form action="mailto:mypalette1030@outlook.com" method="POST" enctype="text/plain" onsubmit="return confirmSubmit()">
-        <div class="fg-row">
-          <div class="fg"><label>お名前 <span class="req">必須</span></label><input type="text" name="お名前" class="fi" placeholder="鈴木 陽大" required></div>
-          <div class="fg"><label>所属・団体名 <span class="req">必須</span></label><input type="text" name="所属・団体名" class="fi" placeholder="〇〇市役所など" required></div>
+    <!-- Hero Section -->
+    <header id="hero" class="hero hero-fullscreen section">
+        <div class="hero-bg-image">
+            <img src="../.gemini/antigravity/brain/685e181f-566c-4102-900f-6185292fdd52/nature_hero_bg_1773732370083.png" alt="Mood nature landscape">
+            <div class="hero-overlay-gradient"></div>
         </div>
-        <div class="fg-row">
-          <div class="fg"><label>メールアドレス <span class="req">必須</span></label><input type="email" name="メールアドレス" class="fi" placeholder="email@company.com" required></div>
-          <div class="fg"><label>電話番号 <span class="opt">任意</span></label><input type="tel" name="電話番号" class="fi" placeholder="03-0000-0000"></div>
+        <div class="hero-bg">
+            <div class="gradient-sphere sphere-2"></div>
+            <div class="gradient-sphere sphere-3"></div>
         </div>
-        <div class="fg">
-          <label>お問い合わせ種別 <span class="req">必須</span></label>
-          <select name="お問い合わせ種別" class="fs" required>
-            <option value="" disabled selected>選択してください</option>
-            <option>行政・自治体との連携について</option>
-            <option>企業スポンサーシップ・協賛について</option>
-            <option>教育機関・フリースクールとの連携について</option>
-            <option>美容学校・美容師との連携について</option>
-            <option>メディア・取材について</option>
-            <option>その他</option>
-          </select>
+        <div class="container hero-container-fullscreen left-aligned-hero">
+            <div class="hero-content reveal">
+                <div class="hero-label">
+                    <span class="line"></span> Re-Palette Project
+                </div>
+                <h1 class="hero-title-modern">
+                    Redefining<br>
+                    Beauty &<br>
+                    <span class="gradient-text italic-serif">Society.</span>
+                </h1>
+                <p class="hero-subtitle text-left">
+                    「おしゃれ」から「自己肯定感の回復」へ。<br>
+                    美容を、社会復帰の新しいインフラに。<br>
+                    <span class="english-sub">Empowering lives through beauty and connection.</span>
+                </p>
+                <div class="hero-cta">
+                    <a href="#about" class="btn btn-primary">Discover <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn btn-outline">Join Us</a>
+                </div>
+            </div>
+            
+            <div class="hero-scroll-indicator">
+                <span>Scroll</span>
+                <div class="line"></div>
+            </div>
         </div>
-        <hr class="form-divider">
-        <div class="fg"><label>お問い合わせ内容 <span class="req">必須</span></label><textarea name="お問い合わせ内容" class="ft" placeholder="ご連絡内容・ご相談内容をご記入ください。" required></textarea></div>
-        <button type="submit" class="form-submit">送信する →</button>
-        <p class="form-note">※ お送りいただいた情報はご連絡対応のみに使用します。</p>
-      </form>
-    </div>
-    <div style="text-align:center;margin-top:20px"><button class="btn-secondary" onclick="showPage('home')" style="cursor:pointer;padding:12px 28px">← ホームに戻る</button></div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette.</div></footer>
-  <nav class="bottom-nav"><button class="bottom-nav-item" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></button></nav>
-</div>
+    </header>
 
+    <!-- About Section -->
+    <section id="about" class="section bg-light">
+        <div class="container relative">
+            <div class="section-badge reveal">Concept</div>
+            <h2 class="section-title reveal" style="margin-bottom: 0.5rem;">Redefining Beauty</h2>
+            <p class="section-subtitle reveal" style="margin-bottom: 3rem;">美容を「社会復帰のインフラ」として機能させる</p>
+            <div class="about-grid">
+                <div class="about-text reveal delay-1">
+                    <p class="lead-text">
+                        Re-Palette（リ・パレット）は、美容を単なる「おしゃれ」から「社会復帰のインフラ」へと再定義する事業です。
+                    </p>
+                    <p>
+                        不登校児・ひきこもり当事者など、社会との接点に課題を抱える方々に対し、サロンの新人美容師・美容学生との共創を通じて自己肯定感を回復し、社会への第一歩を支援します。
+                    </p>
+                    <div class="stats-row mt-4">
+                        <div class="stat-item">
+                            <span class="stat-label">Target</span>
+                            <span class="stat-value">不登校・ひきこもり当事者</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Value</span>
+                            <span class="stat-value">自己肯定感の回復と対人スキル</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual reveal delay-2">
+                    <div class="glass-card aesthetic-card">
+                        <h3>Our Goal</h3>
+                        <ul class="goal-list">
+                            <li><i class="fa-regular fa-circle-check"></i>2027年 法人化</li>
+                            <li><i class="fa-regular fa-circle-check"></i>2028年 全国展開</li>
+                            <li><i class="fa-regular fa-circle-check"></i>「福祉美容対人スキル」認定資格制度創設</li>
+                        </ul>
+                        <div class="quote-box">
+                            <i class="fa-solid fa-quote-left"></i>
+                            <p>一度立ち止まっても、<br>何度でも自分を塗り直せる。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- ADMIN PAGE -->
-<div id="admin-page" class="page">
-  <nav class="dark-nav">
-    <div style="font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.1em;color:var(--red)">Re-Palette Admin</div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn-secondary" style="padding:6px 12px;font-size:.72rem;" onclick="showPage('member-page');renderMemberPosts()">会員ページ</button>
-      <button class="btn-secondary" style="padding:6px 12px;font-size:.72rem;" onclick="showPage('home')">サイトへ</button>
-      <button class="btn-secondary" style="padding:6px 12px;font-size:.72rem;" onclick="doLogout()">ログアウト</button>
-    </div>
-  </nav>
-  <div class="dark-page-section" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;margin:0 auto;">
-    <div class="dp-card">
-      <span class="dp-label">// NEW POST</span>
-      <select id="post-type" class="post-type-sel"><option value="event">📸 イベント写真</option><option value="news">📢 お知らせ</option><option value="report">📝 活動レポート</option><option value="message">💌 会員メッセージ</option></select>
-      <input type="text" id="post-title" class="post-input" placeholder="タイトル">
-      <textarea id="post-body" class="post-textarea" placeholder="本文を入力..."></textarea>
-      <input type="file" id="post-images" class="post-file" accept="image/*" multiple>
-      <button class="post-btn" onclick="submitPost()">投稿する →</button>
-    </div>
-    <div class="dp-card">
-      <span class="dp-label">// POST LIST</span>
-      <div class="admin-scroll" id="admin-posts-list"></div>
-    </div>
-  </div>
-</div>
+    <!-- Issues Section -->
+    <section id="issues" class="section">
+        <div class="container">
+            <div class="section-badge reveal">Social Issues</div>
+            <h2 class="section-title reveal" style="margin-bottom: 0.5rem;">Challenges We Face</h2>
+            <p class="section-subtitle reveal" style="margin-bottom: 3rem;">解決する社会課題</p>
+            
+            <div class="issues-container">
+                <div class="issue-card reveal">
+                    <div class="issue-icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>外見への自信喪失が生む<br>社会参加の壁</h3>
+                    <p>不登校やひきこもりの背景には、心理的要因だけでなく「外見への自信の欠如」が存在します。鏡を見ることが苦痛で、外出が困難になる——この「見えない壁」が社会復帰への第一歩を阻んでいます。</p>
+                </div>
+                <div class="issue-card reveal delay-1">
+                    <div class="issue-icon"><i class="fa-solid fa-link-slash"></i></div>
+                    <h3>支援のミッシングリンク</h3>
+                    <p>医療（内面のケア）と就労支援（スキルの習得）の間に、「社会に出るための自信を育む場」が不足しています。Re-Paletteは美容という具体的アプローチでこの空白を埋めます。</p>
+                </div>
+            </div>
 
+            <div class="data-banner reveal delay-2">
+                <div class="data-item">
+                    <h4>不登校生徒数</h4>
+                    <span>約346,000人</span>
+                    <small>(2023年度)</small>
+                </div>
+                <div class="data-item">
+                    <h4>ひきこもり推計数</h4>
+                    <span>約146万人</span>
+                    <small>(内閣府2023年)</small>
+                </div>
+                <div class="data-item">
+                    <h4>少年院・刑務所出所者の再犯率</h4>
+                    <span>約50%</span>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- MEMBER PAGE -->
-<div id="member-page" class="page">
-  <nav class="dark-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <div style="display:flex;gap:8px;">
-      <button class="btn-secondary" style="padding:6px 12px;font-size:.72rem;" onclick="showPage('home')">← ホーム</button>
-      <button class="btn-secondary" style="padding:6px 12px;font-size:.72rem;" onclick="doLogout()">ログアウト</button>
-    </div>
-  </nav>
-  <div class="dark-page-section" style="max-width:760px;margin:0 auto;">
-    <span class="section-label">// MEMBERS & SUPPORTERS</span>
-    <h1 class="section-title" style="margin-bottom:32px;">サポーター・<br>会員ページ</h1>
-    <div id="member-posts"></div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette.</div></footer>
-</div>
+    <!-- Flow Section -->
+    <section id="flow" class="section bg-gradient">
+        <div class="container">
+            <div class="section-badge reveal" style="display: block; width: fit-content; margin: 0 auto 1rem auto;">Service Flow</div>
+            <h2 class="section-title reveal text-center" style="margin-bottom: 0.5rem;">Our Program</h2>
+            <p class="section-subtitle reveal text-center">サービス内容 (約4時間)<br>参加者の心理的安全性を最優先に、<br>4つのフェーズで自己肯定感の回復をサポートします。</p>
 
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="timeline-num">01</div>
+                    <div class="timeline-content glass-card">
+                        <h3>アイスブレイク <span>(20分)</span></h3>
+                        <p>参加者同士でコミュニティを形成。緊張をほぐし、相互紹介を行います。</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-num">02</div>
+                    <div class="timeline-content glass-card">
+                        <h3>プレ・メンタリング / 共創アセスメント <span>(30分)</span></h3>
+                        <p>美容学生と1対1の対話で信頼関係を構築。「パス可能ルール」により自分のペースを守れます。鏡を見ながら悩みを一緒に可視化していきます。</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal highlight">
+                    <div class="timeline-num">03</div>
+                    <div class="timeline-content glass-card accent-card">
+                        <div class="main-badge">★ メインセッション</div>
+                        <h3>共創ワークショップ <span>(150分)</span></h3>
+                        <ul>
+                            <li><strong>【施術】</strong> カット・眉など刃物を使う施術を新人美容師が担当。</li>
+                            <li><strong>【伴走】</strong> セルフアイロン・スキンケア・似合わせ提案など「明日から自分で再現できる技術」のレクチャーを美容学生が行います。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-num">04</div>
+                    <div class="timeline-content glass-card">
+                        <h3>アフターケア / リフレクション <span>(20分)</span></h3>
+                        <p>変化した自分を確認し感情を言語化。「ステータスカード」で成長を記録し、自信の持続をサポートします。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- PARTNER PAGE -->
-<div id="partner-page" class="page">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <button onclick="showPage('home')" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.7rem;color:var(--gray);letter-spacing:.1em;">← BACK</button>
-    <span style="font-family:var(--font-mono);font-size:.6rem;color:var(--red);">CO-CREATION</span>
-  </nav>
-  <div class="dark-page-header">
-    <span class="section-label">// CO-CREATION PARTNER</span>
-    <h1 class="section-title" data-i18n="pr.title">共に「塗り直せる社会」を<br>創る仲間を募集</h1>
-    <p class="section-lead" data-i18n="pr.lead">2027年の株式会社化と全国展開を見据え、ビジョンを共に広げてくれるパートナーを募集しています。</p>
-  </div>
-  <div class="partner-section">
-    <span class="section-label">// CATEGORIES</span>
-    <div class="pc-grid">
-      <div class="pc-item"><div class="pc-num">CATEGORY 01</div><h3 data-i18n="pr.c1h">プロジェクト運営メンバー</h3><div class="pc-sub" data-i18n="pr.c1s">プロボノ・個人</div><p data-i18n="pr.c1p">SNS運用・広報・イベント運営補助など、事務局機能をサポートしてくださる方</p></div>
-      <div class="pc-item"><div class="pc-num">CATEGORY 02</div><h3 data-i18n="pr.c2h">美容教育パートナー</h3><div class="pc-sub" data-i18n="pr.c2s">美容学校・講師</div><p data-i18n="pr.c2p">学生が「伴走者・教育者」として活躍できる場を共に創り上げるパートナー</p></div>
-      <div class="pc-item"><div class="pc-num">CATEGORY 03</div><h3 data-i18n="pr.c3h">自治体・支援団体</h3><div class="pc-sub" data-i18n="pr.c3s">行政・NPO・フリースクール</div><p data-i18n="pr.c3p">当事者の方々へプログラムを届ける窓口となるパートナー</p></div>
-      <div class="pc-item"><div class="pc-num">CATEGORY 04</div><h3 data-i18n="pr.c4h">企業・スポンサー</h3><div class="pc-sub" data-i18n="pr.c4s">商材提供・資金援助</div><p data-i18n="pr.c4p">美容商材の寄付や活動資金の提供で持続可能な活動を支えてくださる企業様</p></div>
-    </div>
-  </div>
-  <div class="partner-section">
-    <span class="section-label">// REQUIRED MINDSET</span>
-    <div class="mind-list">
-      <div class="mind-item"><div class="mind-icon">🤝</div><div><strong>共感力</strong> — 相手のペースに合わせ否定せずに話を聴けること</div></div>
-      <div class="mind-item"><div class="mind-icon">🌿</div><div><strong>柔軟性</strong> — 計画通りにいかない状況も前向きに受け入れられること</div></div>
-      <div class="mind-item"><div class="mind-icon">💬</div><div><strong>言語化能力</strong> — 相手の小さな変化を具体的な言葉で伝えられること</div></div>
-    </div>
-  </div>
-  <div class="cta-section">
-    <div class="cta-card">
-      <p class="cta-title">参画・お問い合わせ</p>
-      <p class="cta-lead">まずはオンラインでのカジュアルな面談から始めさせてください。</p>
-      <div class="cta-btns">
-        <a href="https://www.instagram.com/repalette_official/" target="_blank" class="btn-primary" style="text-decoration:none">Instagram DM</a>
-        <a href="mailto:mypalette1030@outlook.com" class="btn-secondary" style="text-decoration:none">メール</a>
-        <button class="btn-secondary" onclick="showPage('inquiry-page')">フォーム</button>
-      </div>
-    </div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette.</div></footer>
-  <nav class="bottom-nav"><button class="bottom-nav-item" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></button></nav>
-</div>
+    <!-- Text Break / Parallax equivalent without AI photo -->
+    <section class="image-break section relative">
+        <div class="premium-gradient-bg"></div>
+        <div class="container text-center text-white relative z-10">
+            <h2 class="reveal premium-heading-white">Co-Creation Model</h2>
+            <p class="mt-4 reveal delay-1">徹底したセーフティ設計と、学生との共創モデル。<br>プロではなく「近い世代の美容学生」が伴走者。<br>心理的ハードルを下げ、双方が成長できる環境を。</p>
+        </div>
+    </section>
 
+    <!-- Merits Section -->
+    <section id="merits" class="section">
+        <div class="container">
+            <div class="section-badge reveal">Mutual Benefits</div>
+            <h2 class="section-title reveal" style="margin-bottom: 0.5rem;">Growing Together</h2>
+            <p class="section-subtitle reveal" style="margin-bottom: 3rem;">関わるすべての人が成長する舞台</p>
+            
+            <div class="cards-grid merits-grid">
+                <!-- 参加者への価値 -->
+                <div class="feature-card reveal">
+                    <div class="card-icon"><i class="fa-solid fa-face-smile"></i></div>
+                    <h3>参加者（当事者）への価値</h3>
+                    <ul class="benefit-list">
+                        <li>
+                            <strong>自己肯定感の回復</strong>
+                            外見が整うことで「自分も悪くない」と思え、外出意欲が向上します。
+                        </li>
+                        <li>
+                            <strong>対人リハビリテーション</strong>
+                            年齢の近い学生との交流が社会復帰へのスモールステップに。
+                        </li>
+                        <li>
+                            <strong>一生モノのセルフケア技術</strong>
+                            自分で再現できる力（アイロン・スキンケア）を習得。
+                        </li>
+                    </ul>
+                </div>
 
-<!-- SALON PAGE -->
-<div id="salon-page" class="page">
-  <nav class="top-nav">
-    <button class="nav-brand" onclick="showPage('home')">Re-Palette</button>
-    <button onclick="showPage('home')" style="background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.7rem;color:var(--gray);letter-spacing:.1em;">← BACK</button>
-    <button class="nav-cta-btn" onclick="showPage('inquiry-page')">お問い合わせ</button>
-  </nav>
-  <div class="dark-page-header">
-    <span class="section-label">// FOR SALONS & BEAUTICIANS</span>
-    <h1 class="section-title">新人育成に、<br>社会的意義のある<br>現場を。</h1>
-    <p class="section-lead">Re-Paletteは、サロンの新人美容師が技術・接客・傾聴力を社会課題解決の現場で実践的に磨ける、新しい研修プログラムです。</p>
-  </div>
-  <div class="partner-section">
-    <span class="section-label">// PROBLEM → SOLUTION</span>
-    <div class="salon-problem-grid">
-      <div class="salon-before"><div class="sp-head">CURRENT PAIN POINTS</div><ul class="sp-list"><li>新人が技術を磨く実践の場が少ない</li><li>繊細なお客様への接客トレーニングが難しい</li><li>社会貢献活動として形にしたい</li><li>スタッフのモチベーションを高めたい</li></ul></div>
-      <div class="salon-after"><div class="sp-head">RE-PALETTE SOLVES IT</div><ul class="sp-list sp-ok"><li>実際の施術現場で技術・接客を同時に習得</li><li>繊細な背景を持つ方への傾聴・ケアを実践</li><li>CSR活動・サロンブランディングに活用可能</li><li>「人生を変える仕事」の実感でやりがい向上</li></ul></div>
-    </div>
-  </div>
-  <div class="partner-section">
-    <span class="section-label">// VALUE FOR SALONS</span>
-    <div class="salon-value-grid">
-      <div class="sv-card"><div class="sv-num">01</div><h3>新人研修プログラムとして活用</h3><p>通常の練習台では得られない「繊細なお客様への対応力」を実践で習得。技術・接客・傾聴力の3つを同時に磨けます。</p></div>
-      <div class="sv-card"><div class="sv-num">02</div><h3>CSR・ブランディングに貢献</h3><p>社会復帰支援への参画はサロンのCSR活動として対外発信できます。「社会課題と向き合うサロン」としてブランド価値を高めます。</p></div>
-      <div class="sv-card"><div class="sv-num">03</div><h3>スタッフのやりがいと定着率向上</h3><p>「技術が人の人生を変える」という実体験がスタッフのモチベーションを高め、離職率の低下にもつながります。</p></div>
-    </div>
-  </div>
-  <div class="cta-section">
-    <div class="cta-card">
-      <p class="cta-title">まずはカジュアルな面談から</p>
-      <p class="cta-lead">「新人の育成に困っている」「社会貢献活動を考えている」そんなサロンオーナー・マネージャーの方、ぜひ一度お話しましょう。</p>
-      <div class="cta-btns">
-        <a href="https://www.instagram.com/repalette_official/" target="_blank" class="btn-primary" style="text-decoration:none">Instagram DM</a>
-        <button class="btn-secondary" onclick="showPage('inquiry-page')">お問い合わせフォーム</button>
-      </div>
-    </div>
-  </div>
-  <footer class="site-footer"><div class="footer-brand">Re-Palette</div><div class="footer-copy">© 2025 Re-Palette.</div></footer>
-  <nav class="bottom-nav"><button class="bottom-nav-item" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></button></nav>
-</div>
+                <!-- 学生への価値 -->
+                <div class="feature-card reveal delay-1">
+                    <div class="card-icon"><i class="fa-solid fa-seedling"></i></div>
+                    <h3>新人美容師・美容学生への価値</h3>
+                    <ul class="benefit-list">
+                        <li>
+                            <strong>新人の実践・研修の場</strong>
+                            社会的意義のある現場で技術・接客・傾聴力を磨けます。
+                        </li>
+                        <li>
+                            <strong>社会的意義の体感</strong>
+                            人の人生を前向きに変える成功体験を早期に獲得。
+                        </li>
+                        <li>
+                            <strong>キャリアの実績づくり</strong>
+                            社会貢献活動の実績を就職活動や自己ブランディングに。
+                        </li>
+                    </ul>
+                </div>
 
+                <!-- サロンへの価値 -->
+                <div class="feature-card reveal delay-2">
+                    <div class="card-icon"><i class="fa-solid fa-store"></i></div>
+                    <h3>サロン（経営者）への価値</h3>
+                    <ul class="benefit-list">
+                        <li>
+                            <strong>新しい形の新人研修</strong>
+                            「繊細なお客様への対応力」を実践で習得できる唯一の環境。
+                        </li>
+                        <li>
+                            <strong>CSR・ブランディング</strong>
+                            「社会課題と向き合うサロン」としてブランド価値と採用力を向上。
+                        </li>
+                        <li>
+                            <strong>スタッフの定着率向上</strong>
+                            「技術が人の人生を変える」実体験がモチベーションを高めます。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- AUTH MODAL -->
-<div id="login-modal" class="modal-overlay" onclick="if(event.target===this)closeLoginModal()">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeLoginModal()">✕</button>
-    <div class="modal-header-label">// AUTHENTICATION</div>
-    <div class="modal-title">ログイン / 登録</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">ログイン</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">新規登録</button>
-    </div>
-    <div id="panel-login">
-      <p class="auth-sub">会員・サポーターの方はGoogleまたはメールでログイン</p>
-      <button class="google-btn" onclick="googleLogin()"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Googleでログイン</button>
-      <div class="auth-divider"><span>メールアドレスで</span></div>
-      <div class="mf-group"><label>メールアドレス</label><input type="email" id="email-login-id" class="mf-input" placeholder="email@example.com" onkeydown="if(event.key==='Enter')emailLogin()"></div>
-      <div class="mf-group"><label>パスワード</label><div class="pw-wrap"><input type="password" id="email-login-pw" class="mf-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')emailLogin()"><button class="pw-toggle" onclick="togglePw('email-login-pw',this)" tabindex="-1">👁</button></div></div>
-      <p id="login-error" class="login-error"></p>
-      <button class="modal-submit" onclick="emailLogin()">ログイン →</button>
-      <div class="auth-divider" style="margin-top:16px"><span>管理者の方</span></div>
-      <div class="admin-login-wrap">
-        <input type="text" id="login-id" class="mf-input" placeholder="管理者ID" style="margin-bottom:8px" onkeydown="if(event.key==='Enter')doLogin()">
-        <div class="pw-wrap"><input type="password" id="login-pw" class="mf-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')doLogin()"><button class="pw-toggle" onclick="togglePw('login-pw',this)" tabindex="-1">👁</button></div>
-        <button class="modal-submit admin-submit" onclick="doLogin()" style="margin-top:10px">管理者ログイン →</button>
-      </div>
-      <p class="auth-switch">アカウントをお持ちでない方は <a onclick="switchTab('signup')">新規登録</a></p>
-    </div>
-    <div id="panel-signup" style="display:none">
-      <p class="auth-sub">サポーター・会員として登録</p>
-      <button class="google-btn" onclick="googleSignup()"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Googleで新規登録</button>
-      <div class="auth-divider"><span>メールアドレスで</span></div>
-      <div class="mf-group"><label>お名前 *</label><input type="text" id="signup-name" class="mf-input" placeholder="鈴木 陽大"></div>
-      <div class="mf-group"><label>メールアドレス *</label><input type="email" id="signup-email" class="mf-input" placeholder="email@example.com"></div>
-      <div class="mf-group"><label>パスワード *</label><div class="pw-wrap"><input type="password" id="signup-pw" class="mf-input" placeholder="6文字以上"><button class="pw-toggle" onclick="togglePw('signup-pw',this)" tabindex="-1">👁</button></div></div>
-      <div class="mf-group"><label>パスワード（確認）</label><input type="password" id="signup-pw2" class="mf-input" placeholder="もう一度入力"></div>
-      <p id="signup-error" class="login-error"></p>
-      <button class="modal-submit" onclick="emailSignup()">登録する →</button>
-      <p class="auth-switch">すでにアカウントをお持ちの方は <a onclick="switchTab('login')">ログイン</a></p>
-    </div>
-  </div>
-</div>
+    <!-- Business & Roadmap -->
+    <section id="roadmap" class="section bg-light">
+        <div class="container">
+            <div class="grid-2">
+                <div class="business-model reveal">
+                    <div class="section-badge">Revenue Model</div>
+                    <h2 class="section-title" style="margin-bottom: 0.5rem;">Business Structure</h2>
+                    <p class="mb-4 text-light"><strong>収益モデル</strong><br>行政・施設・企業・個人と、多角的な収益構造で持続可能な事業を構築します。</p>
+                    
+                    <ul class="model-list">
+                        <li>
+                            <div class="model-type">BtoG <span>行政</span></div>
+                            <div class="model-desc">自治体の「孤独・孤立対策」「自立支援」事業を受託。</div>
+                        </li>
+                        <li>
+                            <div class="model-type">BtoB <span>施設</span></div>
+                            <div class="model-desc">通信制高校・フリースクールへの「特別カリキュラム」導入。</div>
+                        </li>
+                        <li>
+                            <div class="model-type">BtoB <span>企業</span></div>
+                            <div class="model-desc">美容室のリクルーティング支援、美容メーカーの協賛金。</div>
+                        </li>
+                        <li>
+                            <div class="model-type">BtoC <span>個人</span></div>
+                            <div class="model-desc">「自信を贈る」ギフト用セルフケア体験チケット販売。</div>
+                        </li>
+                    </ul>
+                </div>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" class="modal-overlay" onclick="closeLightbox()">
-  <img id="lb-img" src="" style="max-width:90vw;max-height:88vh;border:1px solid rgba(224,32,32,.3)">
-</div>
+                <div class="roadmap-container reveal delay-1">
+                    <div class="section-badge">Roadmap</div>
+                    <h2 class="section-title" style="margin-bottom: 0.5rem;">Future Roadmap</h2>
+                    <p class="section-subtitle" style="margin-bottom: 2rem;">実現へのロードマップ</p>
+                    
+                    <div class="road-steps">
+                        <div class="road-step">
+                            <div class="year">2026</div>
+                            <div class="road-content">
+                                <h4>プロトタイプ実施・効果検証</h4>
+                                <p>有効性を実証しデータを蓄積。</p>
+                                <div class="tags">
+                                    <span>試験運用</span><span>データ収集</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="road-step">
+                            <div class="year">2027</div>
+                            <div class="road-content">
+                                <h4>自治体実証実験・法人化</h4>
+                                <p>株式会社化し、全国10拠点へと拡大。</p>
+                                <div class="tags">
+                                    <span>法人化</span><span>行政連携</span><span>10拠点</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="road-step active">
+                            <div class="year">2028</div>
+                            <div class="road-content">
+                                <h4>全国展開・資格制度創設</h4>
+                                <p>「福祉美容対人スキル」認定資格制度の創設と業界標準化。</p>
+                                <div class="tags">
+                                    <span>初・全国展開</span><span>資格制度</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Social Impact -->
+    <section id="impact" class="section relative" style="overflow: hidden;">
+        <div class="premium-abstract-bg">
+            <img src="../.gemini/antigravity/brain/685e181f-566c-4102-900f-6185292fdd52/nature_detail_bg_1773732389455.png" alt="Nature detail background" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.3; z-index: 0; filter: grayscale(50%) contrast(1.2);">
+        </div>
+        <div class="container relative z-10 text-center">
+            <div class="section-badge reveal">Social Impact</div>
+            <h2 class="section-title reveal" style="margin-bottom: 0.5rem;">Our Impact</h2>
+            <p class="section-subtitle reveal" style="margin-bottom: 3rem;">期待される社会的インパクト</p>
+            
+            <div class="impact-grid mt-5">
+                <div class="impact-box glass-card reveal">
+                    <h3><i class="fa-solid fa-chart-line"></i> 定量的成果</h3>
+                    <p>社会復帰率の向上 / 不登校児の外出頻度の増加 / ひきこもり期間の短縮 / 参加者の自己肯定感スコアの改善 / 新人美容師の定着率とスキルの向上</p>
+                </div>
+                <div class="impact-box glass-card accent-border reveal delay-1">
+                    <h3><i class="fa-solid fa-seedling"></i> 定性的成果</h3>
+                    <p>誰もが再チャレンジできる文化を醸成。「福祉美容対人スキル」認定資格制度を通じ、美容と社会福祉の架け橋となる新しい職能領域を確立します。</p>
+                </div>
+            </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-const cfg={apiKey:"AIzaSyBADFOAWs1SkpifKQnEgHP6UafJERLTYII",authDomain:"re-palette-75781.firebaseapp.com",projectId:"re-palette-75781",storageBucket:"re-palette-75781.firebasestorage.app",messagingSenderId:"63542439781",appId:"1:63542439781:web:6cf864455f3d8e1fd0bb8c"};
-const app=initializeApp(cfg),auth=getAuth(app),provider=new GoogleAuthProvider();
-function errMsg(e){return e.code==='auth/popup-closed-by-user'?'ログインがキャンセルされました':e.code==='auth/popup-blocked'?'ポップアップがブロックされました':e.code==='auth/user-not-found'?'このメールアドレスは登録されていません':e.code==='auth/wrong-password'?'パスワードが間違っています':e.code==='auth/email-already-in-use'?'このメールアドレスはすでに登録されています':e.code==='auth/invalid-email'?'メールアドレスの形式が正しくありません':e.code==='auth/weak-password'?'パスワードは6文字以上にしてください':e.code==='auth/invalid-credential'?'メールアドレスまたはパスワードが違います':'エラーが発生しました：'+e.message}
-window._fbGoogleLogin=async()=>{try{document.getElementById('login-error').textContent='';const r=await signInWithPopup(auth,provider);window._fbOnLogin({name:r.user.displayName||r.user.email,email:r.user.email,role:'member',photoURL:r.user.photoURL});}catch(e){document.getElementById('login-error').textContent=errMsg(e);}};
-window._fbEmailLogin=async(email,pw)=>{try{const r=await signInWithEmailAndPassword(auth,email,pw);window._fbOnLogin({name:r.user.displayName||r.user.email,email:r.user.email,role:'member',photoURL:r.user.photoURL});}catch(e){document.getElementById('login-error').textContent=errMsg(e);}};
-window._fbEmailSignup=async(name,email,pw)=>{try{const r=await createUserWithEmailAndPassword(auth,email,pw);await updateProfile(r.user,{displayName:name});window._fbOnLogin({name:r.user.displayName||r.user.email,email:r.user.email,role:'member',photoURL:null});}catch(e){document.getElementById('signup-error').textContent=errMsg(e);}};
-window._fbGoogleSignup=async()=>{try{document.getElementById('signup-error').textContent='';const r=await signInWithPopup(auth,provider);window._fbOnLogin({name:r.user.displayName||r.user.email,email:r.user.email,role:'member',photoURL:r.user.photoURL});}catch(e){document.getElementById('signup-error').textContent=errMsg(e);}};
-window._fbSignOut=async()=>await signOut(auth);
-onAuthStateChanged(auth,u=>{if(u&&window._fbOnLogin)window._fbOnLogin({name:u.displayName||u.email,email:u.email,role:'member',photoURL:u.photoURL},true);});
-</script>
+            <div class="big-quote reveal delay-2">
+                " 一度立ち止まっても、何度でも自分を塗り直せる "
+            </div>
+        </div>
+    </section>
 
-<script>
-// ══ TRANSLATIONS ══
-const i18n={ja:{'nav.problem':'課題','nav.steps':'サービス','nav.merit':'価値','nav.roadmap':'展望','nav.contact':'お問い合わせ','hero.lead':'美容を、すべての人の自信と一歩へ。','hero.cta1':'お問い合わせ','hero.cta2':'クイズを試す','problem.title':'解決する<br>社会課題','problem.lead':'不登校・ひきこもりの背景には「外見への自信の欠如」という見えない壁が存在します。医療と就労支援の"あいだ"の空白を、Re-Paletteが埋めます。','problem.c1t':'見えない壁','problem.c1p':'鏡を見ることが苦痛で外出できない。外見への自信の喪失が、社会復帰の第一歩を阻んでいます。','problem.c2t':'支援のミッシングリンク','problem.c2p':'医療（内面のケア）と就労支援のあいだに、「外に出るための自信」を育む場が不足しています。','problem.c3t':'Re-Paletteの答え','problem.c3p':'美容という身近なアプローチで空白を埋め、美容学生との共創が新たな可能性を開きます。','steps.title':'4ステップで<br>自己肯定感を回復','steps.lead':'参加者の心理的安全性を最優先に、段階的に自信と繋がりを育みます。','steps.s1h':'プレ・メンタリング','steps.s1p':'美容学生と1対1の対話で信頼関係を構築。「パス可能ルール」で自分のペースを守れます。','steps.s2h':'共創アセスメント','steps.s2p':'鏡を見ながら悩みを可視化し、「どんな自分なら外に出やすいか」を一緒に探ります。','steps.s3h':'共創ワークショップ','steps.s3p':'施術はサロンの新人美容師が担当。美容学生は「教えるパートナー」としてアイロン指導・スキンケア・似合わせ提案を行います。','steps.s4h':'アフターケア & リフレクション','steps.s4p':'変化した自分を確認し感情を言語化。「ステータスカード」が自信の持続をサポート。','merit.title':'双方が成長する<br>共創の場','merit.u.title':'参加者（当事者）への価値','merit.u1h':'自己肯定感の回復 — 外見が整うことで自然と外出意欲が向上','merit.u2h':'対人リハビリテーション — 年齢の近い学生との交流でスモールステップ','merit.u3h':'一生モノのセルフケア技術 — 自宅で再現できるスキルを習得','merit.s.title':'新人美容師・美容学生への価値','merit.s1h':'新人の実践・研修の場 — 技術・接客・傾聴力を同時に習得','merit.s2h':'社会的意義の体感 — 人の人生を変える成功体験を早期獲得','merit.s3h':'キャリアの実績づくり — 就職・ブランディングの強力な素材','revenue.title':'収益モデル','rev.h1':'行政連携','rev.p1':'自治体の孤独・孤立対策事業を受託','rev.h2':'施設導入','rev.p2':'通信制高校・フリースクールへの特別カリキュラム','rev.h3':'企業連携','rev.p3':'美容室リクルーティング・メーカー協賛','rev.h4':'ギフト券','rev.p4':'「自信を贈る」体験チケット個人販売','roadmap.title':'ロードマップ','rm.h1':'プロトタイプ実施・効果検証','rm.p1':'パイロットプログラムを実施し、参加者の変化データを蓄積。','rm.tag1a':'試験運用','rm.tag1b':'データ収集','rm.h2':'自治体実証・法人化・10拠点','rm.p2':'自治体との実証実験を開始し法人化、全国10拠点へ拡大。','rm.tag2a':'法人化','rm.tag2b':'行政連携','rm.tag2c':'10拠点','rm.h3':'全国展開・認定資格制度創設','rm.p3':'全国展開を達成。「福祉美容対人スキル」認定資格制度を創設。','rm.tag3a':'全国展開','rm.tag3b':'資格制度','vision.q':'一度立ち止まっても、何度でも自分を塗り直せる。誰もが再チャレンジできる社会を、美容から。','contact.title':'ご支援・ご連携のご相談','contact.btn':'無料相談フォームへ →','contact.lead':'行政・教育機関・企業・美容学校など、幅広いパートナーとの連携を求めています。','contact.name':'鈴木 陽大 — 代表 ／ 羽田国際高等学校 2年','svc.back':'← ホームに戻る','svc.title':'約4時間の<br>本格イベントフロー','svc.lead':'参加者の心理的安全性を最優先に、4つのフェーズを通じて自己肯定感の回復と社会復帰への第一歩をサポートします。','svc.totalLabel':'TOTAL DURATION','svc.ctaTitle':'一緒に、架け橋を作りませんか？','svc.ctaBtn':'お問い合わせ →','svc.ctaLead':'行政・教育機関・企業・美容学校など、幅広いパートナーとの連携を求めています。','svc.goHome':'ホームへ戻る','pr.title':'共に「塗り直せる社会」を<br>創る仲間を募集','pr.lead':'2027年の株式会社化と全国展開を見据え、ビジョンを共に広げてくれるパートナーを募集しています。','pr.c1h':'プロジェクト運営メンバー','pr.c1s':'プロボノ・個人','pr.c1p':'SNS運用・広報・イベント運営補助など、事務局機能をサポートしてくださる方','pr.c2h':'美容教育パートナー','pr.c2s':'美容学校・講師','pr.c2p':'学生が「伴走者・教育者」として活躍できる場を共に創り上げるパートナー','pr.c3h':'自治体・支援団体','pr.c3s':'行政・NPO・フリースクール','pr.c3p':'当事者の方々へプログラムを届ける窓口となるパートナー','pr.c4h':'企業・スポンサー','pr.c4s':'商材提供・資金援助','pr.c4p':'美容商材の寄付や活動資金の提供で持続可能な活動を支えてくださる企業様','pr.navbtn':'共創パートナー募集'},en:{'nav.problem':'Issues','nav.steps':'Service','nav.merit':'Value','nav.roadmap':'Roadmap','nav.contact':'Contact','hero.lead':'Beauty as a step toward confidence — for everyone.','hero.cta1':'Contact Us','hero.cta2':'Try Quiz','problem.title':'The Social<br>Problem We Solve','problem.lead':'Behind school refusal and social withdrawal lies an invisible wall: lack of confidence in appearance. Re-Palette fills the gap between medical care and employment support.','problem.c1t':'The Invisible Wall','problem.c1p':'Looking in a mirror feels painful; leaving home becomes impossible. This barrier blocks the first step toward reintegration.','problem.c2t':'The Missing Link','problem.c2p':'Between medical care and job support, there is no space to build confidence needed to step outside.','problem.c3t':"Re-Palette's Answer",'problem.c3p':'We fill this gap through the familiar, tangible approach of beauty, opening new possibilities through co-creation.','steps.title':'Recover Self-Esteem<br>in 4 Steps','steps.lead':'Prioritizing psychological safety above all, we nurture confidence and connection step by step.','steps.s1h':'Pre-Mentoring','steps.s1p':'Build trust through 1-on-1 dialogue with a beauty student. The "pass anytime" rule lets you go at your own pace.','steps.s2h':'Co-Creation Assessment','steps.s2p':'Look in the mirror to visualize concerns and explore together what kind of appearance would help you step outside.','steps.s3h':'Co-Creation Workshop','steps.s3p':"A salon's new beautician handles all cutting as practical training. The beauty student acts as a coaching partner for self-care guidance.",'steps.s4h':'Aftercare & Reflection','steps.s4p':'Confirm your transformation and put your feelings into words. Your "Status Card" helps sustain your confidence.','merit.title':'A Space Where<br>Both Sides Grow','merit.u.title':'Value for Participants','merit.u1h':'Self-esteem recovery — looking better naturally boosts motivation to go out','merit.u2h':'Interpersonal rehab — near-peer interactions become small steps toward reintegration','merit.u3h':'Lifelong self-care skills — learn techniques reproducible at home','merit.s.title':'Value for New Beauticians & Students','merit.s1h':'Real training ground — develop technique, service skills, and listening simultaneously','merit.s2h':'Experiencing social impact — early experience of positively changing someone\'s life','merit.s3h':'Career track record — powerful material for job hunting and salon branding','revenue.title':'Revenue Model','rev.h1':'Gov. Partnership','rev.p1':'Contract for social isolation countermeasures','rev.h2':'Institution Intro','rev.p2':'Special curriculum for schools and free schools','rev.h3':'Corporate','rev.p3':'Salon recruiting support and manufacturer sponsorship','rev.h4':'Gift Tickets','rev.p4':'Sell "give the gift of confidence" self-care tickets','roadmap.title':'Roadmap','rm.h1':'Prototype Launch & Validation','rm.p1':'Run pilot programs and accumulate participant change data.','rm.tag1a':'Pilot','rm.tag1b':'Data Collection','rm.h2':'Municipal Pilot · Incorporation · 10 Locations','rm.p2':'Launch municipal pilots, incorporate, expand to 10 partner facilities.','rm.tag2a':'Incorporation','rm.tag2b':'Gov. Partnership','rm.tag2c':'10 Locations','rm.h3':'National Expansion · Certification Program','rm.p3':'Achieve nationwide expansion. Establish certified "welfare beauty" program.','rm.tag3a':'Nationwide','rm.tag3b':'Certification','vision.q':'Even if you stop for a while, you can repaint yourself anytime. A society where everyone can try again — through beauty.','contact.title':'Support & Partnership','contact.btn':'Free Consultation Form →','contact.lead':'We are seeking partnerships with government, educational institutions, corporations, and beauty schools.','contact.name':'Haruta Suzuki — Founder / Haneda Intl. High School, Y2','svc.back':'← Back','svc.title':'A Full 4-Hour<br>Event Flow','svc.lead':'Placing psychological safety first, we support recovery of self-esteem across four phases.','svc.totalLabel':'TOTAL DURATION','svc.ctaTitle':"Let's Build a Bridge Together.",'svc.ctaBtn':'Contact Us →','svc.ctaLead':'We welcome partnerships with government, institutions, corporations, and beauty schools.','svc.goHome':'Return to Home','pr.title':'Join Us in Building a Society<br>Where Everyone Can Start Over','pr.lead':'Looking ahead to 2027 incorporation and national expansion, we are recruiting partners.','pr.c1h':'Operations Member','pr.c1s':'Pro Bono / Individual','pr.c1p':'Support secretariat functions: SNS, PR, and event operations','pr.c2h':'Beauty Education Partner','pr.c2s':'Beauty Schools / Instructors','pr.c2p':'Co-create spaces where students thrive as coaching partners','pr.c3h':'Municipal & Support Orgs','pr.c3s':'Government / NPOs / Free Schools','pr.c3p':'Act as the gateway to deliver Re-Palette programs','pr.c4h':'Corporate Sponsors','pr.c4s':'Product Donations / Funding','pr.c4p':'Support sustainability through beauty product donations or financial contributions','pr.navbtn':'Co-Creation Partner Recruitment'},ko:{'nav.problem':'과제','nav.steps':'서비스','nav.merit':'가치','nav.roadmap':'전망','nav.contact':'문의','hero.lead':'미용을, 모든 사람의 자신감과 첫걸음으로.','hero.cta1':'문의하기','hero.cta2':'퀴즈 시도','problem.title':'해결하는<br>사회 문제','problem.lead':'부등교·은둔의 배경에는 외모에 대한 자신감 부족이라는 보이지 않는 벽이 있습니다. Re-Palette가 의료와 취업 지원 사이의 공백을 채웁니다.','problem.c1t':'보이지 않는 벽','problem.c1p':'거울 보기가 고통스럽고 외출이 어려워집니다.','problem.c2t':'지원의 미싱 링크','problem.c2p':'의료와 취업 지원 사이에 외출을 위한 자신감을 키우는 공간이 부족합니다.','problem.c3t':'Re-Palette의 답','problem.c3p':'뷰티라는 친숙한 접근으로 공백을 채우고, 뷰티 학생과의 공동 창작이 새로운 가능성을 엽니다.','steps.title':'4단계로<br>자기 긍정감 회복','steps.lead':'참가자의 심리적 안전을 최우선으로, 단계적으로 자신감과 연결을 키웁니다.','steps.s1h':'프리 멘토링','steps.s1p':'뷰티 학생과 1대1 대화로 신뢰를 구축합니다.','steps.s2h':'공동 창작 어세스먼트','steps.s2p':'거울을 보며 고민을 가시화하고 함께 탐색합니다.','steps.s3h':'공동 창작 워크샵','steps.s3p':'시술은 신인 미용사가 담당. 뷰티 학생은 교육 파트너로서 셀프케어 지도를 담당합니다.','steps.s4h':'애프터케어 & 리플렉션','steps.s4p':'변화한 자신을 확인하고 감정을 언어화합니다.','merit.title':'서로가 성장하는<br>공동 창작의 장','merit.u.title':'참가자에게 주는 가치','merit.u1h':'자기 긍정감 회복','merit.u2h':'대인 재활','merit.u3h':'평생 셀프케어 기술','merit.s.title':'신인 미용사·뷰티 학생에게 주는 가치','merit.s1h':'신인 실습·연수의 장','merit.s2h':'사회적 의의 체감','merit.s3h':'커리어 실적 쌓기','revenue.title':'수익 모델','rev.h1':'지자체 연계','rev.p1':'자치단체의 고독·고립 대책 사업 수탁','rev.h2':'시설 도입','rev.p2':'통신제 고교·프리스쿨에 특별 커리큘럼','rev.h3':'기업 연계','rev.p3':'미용실 리크루팅·제조사 협찬','rev.h4':'기프트권','rev.p4':'자신감을 선물하는 체험 티켓 개인 판매','roadmap.title':'로드맵','rm.h1':'프로토타입 실시·효과 검증','rm.p1':'파일럿 프로그램을 실시하고 참가자 변화 데이터를 축적합니다.','rm.tag1a':'시험 운영','rm.tag1b':'데이터 수집','rm.h2':'지자체 실증·법인화·10거점','rm.p2':'지자체와 실증실험을 시작하고 법인화, 전국 10거점으로 확대합니다.','rm.tag2a':'법인화','rm.tag2b':'행정 연계','rm.tag2c':'10거점','rm.h3':'전국 전개·인정 자격 제도 창설','rm.p3':'전국 전개를 달성하고 자격 제도를 창설합니다.','rm.tag3a':'전국 전개','rm.tag3b':'자격 제도','vision.q':'잠시 멈춰도, 언제든 자신을 다시 칠할 수 있다. 누구나 재도전할 수 있는 사회를, 뷰티로부터.','contact.title':'지원·파트너십 문의','contact.btn':'무료 상담 →','contact.lead':'행정·교육 기관·기업·뷰티 학교 등 다양한 파트너와의 연계를 모색합니다.','contact.name':'스즈키 하루타 — 대표 / 하네다 국제 고등학교 2학년','svc.back':'← 뒤로','svc.title':'약 4시간의<br>본격 이벤트 플로우','svc.lead':'참가자의 심리적 안전을 최우선으로, 4개의 단계를 통해 자기 긍정감 회복을 지원합니다.','svc.totalLabel':'총 소요 시간','svc.ctaTitle':'함께 가교를 만들지 않겠습니까?','svc.ctaBtn':'문의하기 →','svc.ctaLead':'행정·교육 기관·기업·뷰티 학교 등 다양한 파트너와의 연계를 모색합니다.','svc.goHome':'홈으로 돌아가기','pr.title':'함께 "다시 칠할 수 있는 사회"를<br>만들 동료를 모집','pr.lead':'2027년 법인화와 전국 전개를 위해 비전을 함께 넓혀줄 파트너를 모집합니다.','pr.c1h':'프로젝트 운영 멤버','pr.c1s':'프로보노·개인','pr.c1p':'SNS 운영·홍보·이벤트 운영 보조를 지원해 주실 분','pr.c2h':'뷰티 교육 파트너','pr.c2s':'뷰티 스쿨·강사','pr.c2p':'학생이 교육자로 활약할 수 있는 공간을 함께 만들어나갈 파트너','pr.c3h':'지자체·지원 단체','pr.c3s':'행정·NPO·프리스쿨','pr.c3p':'당사자분들께 프로그램을 전달하는 창구가 되어주실 파트너','pr.c4h':'기업·스폰서','pr.c4s':'상품 제공·자금 지원','pr.c4p':'뷰티 상품 기부나 활동 자금 제공으로 지속 가능한 활동을 지원해 주실 기업','pr.navbtn':'공동 창작 파트너 모집'},zh:{'nav.problem':'社会问题','nav.steps':'服务','nav.merit':'价值','nav.roadmap':'规划','nav.contact':'联系','hero.lead':'让美容，成为每个人自信与第一步的力量。','hero.cta1':'联系我们','hero.cta2':'尝试测验','problem.title':'解决的<br>社会课题','problem.lead':'不登校和社会退缩的背后，隐藏着对外貌缺乏自信的无形壁垒。Re-Palette填补了医疗与就业支援之间的空白。','problem.c1t':'无形的壁垒','problem.c1p':'照镜子感到痛苦，无法外出。','problem.c2t':'支援的缺失环节','problem.c2p':'在医疗与就业支援之间，缺乏培养外出自信的场所。','problem.c3t':'Re-Palette的答案','problem.c3p':'通过美容这一亲近的方式填补空白，与美容学生的共创开启新可能。','steps.title':'通过4个步骤<br>恢复自我肯定感','steps.lead':'以参与者的心理安全为最优先，逐步培养自信与联结。','steps.s1h':'预备辅导','steps.s1p':'通过与美容学生的1对1对话建立信任关系。','steps.s2h':'共创评估','steps.s2p':'对着镜子将烦恼可视化，一起探索。','steps.s3h':'共创工作坊','steps.s3p':'施术由新人美容师担当。美容学生作为教导伙伴负责护肤及个性化建议。','steps.s4h':'后续关怀与反思','steps.s4p':'确认变化后的自己并将感受言语化。','merit.title':'双方都能成长的<br>共创场所','merit.u.title':'对参与者的价值','merit.u1h':'自我肯定感恢复','merit.u2h':'人际康复训练','merit.u3h':'终身受益的自护技能','merit.s.title':'对新人美容师及学生的价值','merit.s1h':'新人实践研修场所','merit.s2h':'体验社会意义','merit.s3h':'积累职业履历','revenue.title':'收益模式','rev.h1':'政府合作','rev.p1':'承接自治体孤独·孤立对策事业','rev.h2':'机构导入','rev.p2':'为通信制高中·自由学校提供特别课程','rev.h3':'企业合作','rev.p3':'美容院招聘支援及制造商赞助','rev.h4':'礼品券','rev.p4':'销售赠送自信的体验券','roadmap.title':'路线图','rm.h1':'原型实施·效果验证','rm.p1':'实施试点项目，积累参与者变化数据。','rm.tag1a':'试验运营','rm.tag1b':'数据收集','rm.h2':'地方政府实证·法人化·10据点','rm.p2':'启动实证实验并完成法人化，扩展至全国10个据点。','rm.tag2a':'法人化','rm.tag2b':'政府合作','rm.tag2c':'10据点','rm.h3':'全国展开·资格制度创设','rm.p3':'实现全国展开，创设认定资格制度。','rm.tag3a':'全国展开','rm.tag3b':'资格制度','vision.q':'即使停下脚步，也可以随时重新描绘自己。从美容出发，构建人人都能再挑战的社会。','contact.title':'支援与合作咨询','contact.btn':'免费咨询表格 →','contact.lead':'正在寻求与政府、教育机构、企业及美容学校等广泛合作伙伴的联合。','contact.name':'铃木阳大 — 代表 / 羽田国际高中 2年级','svc.back':'← 返回','svc.title':'约4小时的<br>正式活动流程','svc.lead':'以参与者的心理安全为最优先，通过4个阶段支持自我肯定感的恢复。','svc.totalLabel':'总时长','svc.ctaTitle':'我们一起搭建桥梁，好吗？','svc.ctaBtn':'联系我们 →','svc.ctaLead':'欢迎与政府、教育机构、企业及美容学校等广泛合作。','svc.goHome':'返回首页','pr.title':'招募共同创建"可以重新描绘的社会"的伙伴','pr.lead':'着眼于2027年法人化与全国展开，招募合作伙伴。','pr.c1h':'项目运营成员','pr.c1s':'公益志愿·个人','pr.c1p':'支持秘书处功能：SNS运营、公关宣传、活动运营协助等。','pr.c2h':'美容教育合作伙伴','pr.c2s':'美容学校·讲师','pr.c2p':'共同创建学生作为教育者活跃的场所。','pr.c3h':'地方政府·支援团体','pr.c3s':'行政·NPO·自由学校','pr.c3p':'成为将Re-Palette项目传递给当事人的窗口合作伙伴。','pr.c4h':'企业·赞助商','pr.c4s':'商品提供·资金援助','pr.c4p':'通过捐赠美容商品或提供活动资金支持可持续发展。','pr.navbtn':'共创伙伴招募'}};
+    <!-- Contact & Partners -->
+    <footer id="contact" class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-info reveal">
+                        <a href="#" class="logo footer-logo">Re-Palette<span>.</span></a>
+                        <p class="footer-desc mt-3">美容を通じた社会復帰支援事業。<br>私たちは、ビジョンを共に広げてくれるパートナーを募集しています。</p>
+                    </div>
+                    
+                    <div class="footer-partners reveal delay-1">
+                        <h4>共創パートナー募集</h4>
+                        <ul class="partner-list">
+                            <li><i class="fa-solid fa-check text-accent"></i> <strong>プロジェクト運営メンバー</strong> (SNS・広報・事務局)</li>
+                            <li><i class="fa-solid fa-check text-accent"></i> <strong>美容教育パートナー</strong> (指導役・伴走者)</li>
+                            <li><i class="fa-solid fa-check text-accent"></i> <strong>自治体・支援団体</strong> (行政・NPO・フリースクール)</li>
+                            <li><i class="fa-solid fa-check text-accent"></i> <strong>企業・スポンサー</strong> (商材寄付・資金提供)</li>
+                        </ul>
+                    </div>
 
-let currentLang='ja';
-function setLang(lang){
-  currentLang=lang;const dict=i18n[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(dict[k]!==undefined)el.innerHTML=dict[k];});
-  document.getElementById('root').lang=lang;
-  document.querySelectorAll('.nav-lang-btn').forEach(btn=>{const m=btn.getAttribute('onclick').match(/'(\w+)'/);if(m)btn.classList.toggle('active',m[1]===lang);});
-}
+                    <div class="footer-contact glass-card reveal delay-2">
+                        <h4>ご支援・ご連携のご相談</h4>
+                        <div class="contact-person">
+                            代表 <strong>鈴木 陽大</strong> (Haruto Suzuki)
+                            <small>羽田国際高等学校 2年</small>
+                        </div>
+                        <ul class="contact-details mt-3">
+                            <li><i class="fa-solid fa-phone"></i> 080-7177-1030</li>
+                            <li><i class="fa-solid fa-envelope"></i> mypalette1030@outlook.jp</li>
+                            <li><i class="fa-brands fa-instagram"></i> @repalette_official</li>
+                        </ul>
+                        <a href="mailto:mypalette1030@outlook.jp" class="btn btn-primary w-100 mt-3 text-center">お問い合わせ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p>&copy; 2026 Re-Palette. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-// PAGE SWITCHING
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const t=document.getElementById(id);
-  if(t){t.classList.add('active');window.scrollTo({top:0,behavior:'instant'});}
-  setupObserver();
-  if(id==='home')setTimeout(animateMetricBars,500);
-}
-
-// PROGRESS BAR
-let ticking=false;
-window.addEventListener('scroll',()=>{
-  if(!ticking){requestAnimationFrame(()=>{
-    const h=document.documentElement;
-    document.getElementById('prog').style.width=(window.scrollY/(h.scrollHeight-h.clientHeight)*100)+'%';
-    ticking=false;
-  });ticking=true;}
-},{passive:true});
-
-// METRIC BAR
-function animateMetricBars(){
-  document.querySelectorAll('.metric-bar').forEach(b=>{const w=b.dataset.width;if(w)b.style.width=w+'%';});
-}
-setTimeout(animateMetricBars,700);
-
-function confirmSubmit(){return confirm('メールアプリが開きます。送信してよろしいですか？');}
-
-// INTERSECTION OBSERVER
-let io;
-function setupObserver(){
-  if(io)io.disconnect();
-  io=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
-  },{threshold:0.1});
-  document.querySelectorAll('.step-item:not(.visible),.tl-item:not(.visible),.flow-card:not(.visible)').forEach((el,i)=>{
-    el.style.transitionDelay=(i%4*.08)+'s';io.observe(el);
-  });
-}
-setupObserver();
-
-// AUTH
-const ADMIN_ID='admin',ADMIN_PW='repalette2025';
-let isLoggedIn=false,currentUser=null;
-
-window._fbOnLogin=function(user,silent){
-  if(currentUser&&currentUser.role==='admin')return;
-  isLoggedIn=true;currentUser=user;updateNavForUser();renderMemberPosts();
-  if(!silent){closeLoginModal();showPage('member-page');}
-};
-
-function googleLogin(){if(window._fbGoogleLogin)window._fbGoogleLogin();else alert('Firebase読み込み中です。');}
-function googleSignup(){if(window._fbGoogleSignup)window._fbGoogleSignup();else alert('Firebase読み込み中です。');}
-function emailLogin(){
-  const email=document.getElementById('email-login-id').value.trim(),pw=document.getElementById('email-login-pw').value;
-  document.getElementById('login-error').textContent='';
-  if(!email||!pw){document.getElementById('login-error').textContent='メールアドレスとパスワードを入力してください';return;}
-  if(window._fbEmailLogin)window._fbEmailLogin(email,pw);
-}
-function emailSignup(){
-  const name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),pw=document.getElementById('signup-pw').value,pw2=document.getElementById('signup-pw2').value;
-  const err=document.getElementById('signup-error');err.textContent='';
-  if(!name||!email||!pw){err.textContent='すべての必須項目を入力してください';return;}
-  if(pw!==pw2){err.textContent='パスワードが一致しません';return;}
-  if(window._fbEmailSignup)window._fbEmailSignup(name,email,pw);
-}
-
-function getPosts(){try{const r=localStorage.getItem('rp_posts');return r?JSON.parse(r):[];}catch(e){return[];}}
-function savePosts(p){localStorage.setItem('rp_posts',JSON.stringify(p));}
-
-function openLoginModal(){document.getElementById('login-modal').classList.add('open');switchTab('login');}
-function closeLoginModal(){document.getElementById('login-modal').classList.remove('open');document.getElementById('login-error').textContent='';if(document.getElementById('signup-error'))document.getElementById('signup-error').textContent='';}
-function switchTab(tab){
-  document.getElementById('tab-login').classList.toggle('active',tab==='login');
-  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
-  document.getElementById('panel-login').style.display=tab==='login'?'block':'none';
-  document.getElementById('panel-signup').style.display=tab==='signup'?'block':'none';
-}
-function togglePw(id,btn){const el=document.getElementById(id);el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
-
-function doLogin(){
-  const id=document.getElementById('login-id').value.trim(),pw=document.getElementById('login-pw').value;
-  document.getElementById('login-error').textContent='';
-  if(id===ADMIN_ID&&pw===ADMIN_PW){isLoggedIn=true;currentUser={name:'管理者',email:ADMIN_ID,role:'admin'};closeLoginModal();updateNavForUser();showPage('admin-page');renderAdminPosts();}
-  else{document.getElementById('login-error').textContent='IDまたはパスワードが違います';}
-}
-async function doLogout(){
-  if(currentUser&&currentUser.role!=='admin'&&window._fbSignOut)await window._fbSignOut();
-  isLoggedIn=false;currentUser=null;updateNavForUser();showPage('home');
-}
-
-function updateNavForUser(){
-  const btn=document.querySelector('.login-nav-btn');if(!btn)return;
-  if(currentUser){
-    const initial=currentUser.name.charAt(0);
-    const avatar=currentUser.photoURL?`<img src="${currentUser.photoURL}" class="user-avatar-img">`:`<span class="user-avatar">${initial}</span>`;
-    btn.innerHTML=`${avatar}<div class="user-dropdown" id="user-dropdown"><div class="ud-name">${currentUser.name}</div><div class="ud-email">${currentUser.email}</div><hr class="ud-divider"><button class="ud-item" onclick="goToMyPage(event)">${currentUser.role==='admin'?'管理画面':'会員ページ'}</button><button class="ud-item ud-logout" onclick="doLogout()">ログアウト</button></div>`;
-    btn.classList.add('logged-in');btn.onclick=toggleDropdown;
-  }else{
-    btn.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> LOGIN`;
-    btn.classList.remove('logged-in');btn.onclick=openLoginModal;
-  }
-}
-function toggleDropdown(e){e.stopPropagation();const dd=document.getElementById('user-dropdown');if(dd)dd.classList.toggle('open');}
-function goToMyPage(e){e.stopPropagation();closeDropdown();if(currentUser.role==='admin'){showPage('admin-page');renderAdminPosts();}else{renderMemberPosts();showPage('member-page');}}
-function closeDropdown(){const dd=document.getElementById('user-dropdown');if(dd)dd.classList.remove('open');}
-document.addEventListener('click',closeDropdown);
-
-function submitPost(){
-  const type=document.getElementById('post-type').value,title=document.getElementById('post-title').value.trim(),body=document.getElementById('post-body').value.trim(),fi=document.getElementById('post-images');
-  if(!title||!body){alert('タイトルと本文を入力してください');return;}
-  const post={id:Date.now(),type,title,body,date:new Date().toLocaleDateString('ja-JP'),images:[]};
-  const files=fi.files;
-  if(files.length>0){let loaded=0;Array.from(files).forEach(f=>{const r=new FileReader();r.onload=e=>{post.images.push(e.target.result);loaded++;if(loaded===files.length)saveAndRefresh(post);};r.readAsDataURL(f);});}else saveAndRefresh(post);
-}
-function saveAndRefresh(post){
-  const posts=getPosts();posts.unshift(post);savePosts(posts);
-  document.getElementById('post-title').value='';document.getElementById('post-body').value='';document.getElementById('post-images').value='';
-  renderAdminPosts();renderMemberPosts();alert('投稿しました！');
-}
-function deletePost(id){if(!confirm('削除しますか？'))return;savePosts(getPosts().filter(p=>p.id!==id));renderAdminPosts();renderMemberPosts();}
-function typeLabel(t){return{event:'📸 イベント写真',news:'📢 お知らせ',report:'📝 活動レポート',message:'💌 メッセージ'}[t]||t;}
-
-function renderAdminPosts(){
-  const posts=getPosts(),el=document.getElementById('admin-posts-list');if(!el)return;
-  if(!posts.length){el.innerHTML='<p style="color:var(--gray);text-align:center;padding:24px;font-family:var(--font-mono);font-size:.65rem;">NO POSTS YET</p>';return;}
-  el.innerHTML=posts.map(p=>`<div class="ap-card"><div class="ap-meta"><span class="ap-tag">${typeLabel(p.type)}</span><span class="ap-date">${p.date}</span></div><div class="ap-title">${p.title}</div><div class="ap-body">${p.body.replace(/\n/g,'<br>')}</div>${p.images.map(img=>`<img src="${img}" class="ap-img">`).join('')}<button class="ap-del" onclick="deletePost(${p.id})">✕ 削除</button></div>`).join('');
-}
-function renderMemberPosts(){
-  const posts=getPosts(),el=document.getElementById('member-posts');if(!el)return;
-  if(!posts.length){el.innerHTML='<p style="color:var(--gray);text-align:center;padding:40px;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.1em;">// NO POSTS YET</p>';return;}
-  el.innerHTML=posts.map(p=>`<div class="mp-card"><div class="mp-meta"><span class="mp-tag">${typeLabel(p.type)}</span><span class="mp-date">${p.date}</span></div><h3 class="mp-title">${p.title}</h3><p class="mp-body">${p.body.replace(/\n/g,'<br>')}</p>${p.images.length?`<div class="mp-gallery">${p.images.map(img=>`<img src="${img}" class="mp-img" onclick="openLightbox('${img}')">`).join('')}</div>`:''}</div>`).join('');
-}
-
-function openLightbox(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLoginModal();closeLightbox();}});
-function scrollToSection(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
-
-renderMemberPosts();
-</script>
+    <!-- Script -->
+    <script src="script.js"></script>
 </body>
 </html>
